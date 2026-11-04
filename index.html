@@ -389,7 +389,6 @@
       <div class="panel result-panel"><div class="kicker">01 / OUR IDENTITY</div><h3>Hasil Nama Angkatan</h3><div id="resultNama"></div></div>
       <div class="panel result-panel"><div class="kicker">02 / OUR LEADER</div><h3>Hasil Ketua Angkatan</h3><div id="resultKetua"></div></div>
     </div>
-    <div class="notice">Hasil pada versi ini tersimpan di browser yang digunakan. Data belum otomatis tersinkron antarperangkat dan belum menjadi hasil resmi.</div>
   </div>
 </div></section>
 
@@ -700,20 +699,62 @@ async function copyResultsImage(targetId="resultsContent",triggerBtn=null){
  if(!window.html2canvas){Swal.fire("Fitur belum tersedia","Library pembuat gambar belum termuat. Periksa koneksi internet lalu coba lagi.","warning");return;}
  const btn=triggerBtn||document.querySelector("#resultsContent .result-actions button[onclick*='copyResultsImage']");
  const oldText=btn?btn.innerHTML:"";
+ let captureStage=null;
  try{
   if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Membuat gambar...';}
   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-  const canvas=await html2canvas(target,{backgroundColor:"#f6f2e9",scale:2,useCORS:true,allowTaint:false,logging:false,windowWidth:Math.max(document.documentElement.clientWidth,target.scrollWidth),onclone:doc=>{doc.querySelectorAll("[data-html2canvas-ignore='true']").forEach(el=>el.style.display="none");}});
+
+  // Stage khusus untuk memberi margin yang konsisten pada hasil gambar.
+  const targetRect=target.getBoundingClientRect();
+  const captureWidth=Math.max(320,Math.ceil(targetRect.width||target.scrollWidth||900));
+  const sideMargin=captureWidth<=600?22:34;
+  captureStage=document.createElement("div");
+  captureStage.setAttribute("data-voting-image-stage","true");
+  captureStage.setAttribute("aria-hidden","true");
+  captureStage.style.cssText=[
+   "position:absolute","left:0","top:0","z-index:-1","pointer-events:none",
+   "display:block","width:"+captureWidth+"px","padding:"+sideMargin+"px",
+   "box-sizing:border-box","background:#f6f2e9","border-radius:24px","overflow:visible"
+  ].join(";");
+
+  const clonedTarget=target.cloneNode(true);
+  Object.assign(clonedTarget.style,{
+   display:"block",visibility:"visible",position:"relative",inset:"auto",
+   width:"100%",maxWidth:"none",minWidth:"0",height:"auto",maxHeight:"none",
+   margin:"0",boxSizing:"border-box"
+  });
+  clonedTarget.querySelectorAll("[data-html2canvas-ignore='true']").forEach(el=>el.remove());
+  captureStage.appendChild(clonedTarget);
+  document.body.appendChild(captureStage);
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+
+  const canvas=await html2canvas(captureStage,{
+   backgroundColor:"#f6f2e9",scale:2,useCORS:true,allowTaint:false,logging:false,
+   width:captureStage.scrollWidth,height:captureStage.scrollHeight,
+   windowWidth:Math.max(document.documentElement.clientWidth,captureWidth),
+   onclone:doc=>{
+    doc.querySelectorAll("[data-html2canvas-ignore='true']").forEach(el=>el.remove());
+    const stage=doc.querySelector("[data-voting-image-stage='true']");
+    if(stage){stage.style.opacity="1";stage.style.visibility="visible";}
+   }
+  });
   const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Gagal membuat file gambar.")),"image/png"));
   if(navigator.clipboard&&window.ClipboardItem&&navigator.clipboard.write){
    await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);
-   Swal.fire({icon:"success",title:"Gambar berhasil disalin",html:"Buka WhatsApp, pilih chat tujuan, lalu tekan <b>Ctrl + V</b> atau pilih <b>Tempel</b>. Yang ditempel adalah gambar hasil voting."});
+   Swal.fire({icon:"success",title:"Gambar berhasil disalin",html:"Gambar hasil voting sudah dilengkapi margin agar lebih rapi. Buka WhatsApp, pilih chat tujuan, lalu tekan <b>Ctrl + V</b> atau pilih <b>Tempel</b>."});
   }else{
-   const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="hasil-voting-angkatan-xvi-admin.png";a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);
-   Swal.fire({icon:"info",title:"Gambar berhasil dibuat",text:"Browser belum mendukung salin gambar langsung. File PNG diunduh; lampirkan sebagai gambar di WhatsApp."});
+   const url=URL.createObjectURL(blob),a=document.createElement("a");
+   a.href=url;a.download="hasil-voting-angkatan-xvi.png";a.click();
+   setTimeout(()=>URL.revokeObjectURL(url),1500);
+   Swal.fire({icon:"info",title:"Gambar berhasil dibuat",text:"Browser belum mendukung salin gambar langsung. File PNG dengan margin sudah diunduh; lampirkan sebagai gambar di WhatsApp."});
   }
- }catch(err){console.error("Salin gambar hasil voting:",err);Swal.fire("Belum berhasil menyalin gambar","Izinkan akses clipboard pada browser dan pastikan halaman dibuka melalui HTTPS. Detail: "+(err.message||"Clipboard tidak tersedia"),"warning");}
- finally{if(btn){btn.disabled=false;btn.innerHTML=oldText;}}
+ }catch(err){
+  console.error("Salin gambar hasil voting:",err);
+  Swal.fire("Belum berhasil menyalin gambar","Izinkan akses clipboard pada browser dan pastikan halaman dibuka melalui HTTPS. Detail: "+(err.message||"Clipboard tidak tersedia"),"warning");
+ }finally{
+  if(captureStage&&captureStage.parentNode)captureStage.parentNode.removeChild(captureStage);
+  if(btn){btn.disabled=false;btn.innerHTML=oldText;}
+ }
 }
 async function copyAdminToken(){
  const input=document.getElementById("adminToken"),value=input?.value.trim();
