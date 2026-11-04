@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#233f32">
+<title>E-Voting Angkatan XVI | SMP IT Mentari Ilmu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root{--green:#233f32;--primary:#2e473e;--sage:#e1e9dc;--cream:#f6f2e9;--paper:#fffdf8;--gold:#c4a36b;--ink:#24342c;--muted:#737b72;--line:#dedfd5;--red:#a8433c;--shadow:0 18px 50px rgba(35,63,50,.09)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:"DM Sans",Arial,sans-serif;line-height:1.6}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}.topbar{height:76px;background:rgba(255,253,248,.96);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(5%,calc((100% - 1180px)/2));position:sticky;top:0;z-index:20;backdrop-filter:blur(12px)}.brand{display:flex;align-items:center;gap:12px;font-weight:800;color:var(--green);line-height:1.25}.brand-mark{width:43px;height:43px;border-radius:14px;background:var(--green);color:#fff;display:grid;place-items:center;font-size:22px;box-shadow:0 6px 15px #233f3228}.brand small{display:block;font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:700}.nav{display:flex;gap:7px;align-items:center}.nav button{border:0;background:transparent;color:#59665d;padding:10px 16px;border-radius:30px;font-weight:700;font-size:13px;transition:.2s}.nav button:hover,.nav button.active{background:var(--green);color:white}.nav button span{margin-right:7px}.menu-btn{display:none;border:1px solid var(--line);background:white;border-radius:12px;padding:9px 12px;color:var(--green)}.page{display:none}.page.active{display:block}.hero{position:relative;overflow:hidden;background:var(--green);color:white;padding:76px 20px 85px;text-align:center}.hero:before,.hero:after{content:"";position:absolute;border:1px solid #ffffff18;border-radius:50%;width:440px;height:440px}.hero:before{left:-190px;top:-290px}.hero:after{right:-180px;bottom:-330px;width:570px;height:570px}.hero-inner{position:relative;z-index:1;max-width:850px;margin:auto}.eyebrow{font-size:11px;letter-spacing:3px;color:#d7c49f;font-weight:800}.hero h1{font:800 clamp(38px,6vw,68px)/1.08 "Playfair Display",Georgia,serif;margin:18px 0 14px;letter-spacing:-1px}.hero h1 em{display:block;color:#d9bd86;font-style:normal}.hero p{color:#e1e9dc;margin:0 auto;max-width:620px;font-size:16px}.tagline{font:italic 18px "Playfair Display",serif!important;margin-top:18px!important;color:#e8d7b5!important}.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px}.btn{border:0;border-radius:13px;padding:13px 20px;font-weight:800;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.2s}.btn:hover{transform:translateY(-2px);filter:brightness(1.04)}.btn-primary{background:var(--green);color:white;box-shadow:0 8px 20px #233f3226}.btn-gold{background:var(--gold);color:#26372d}.btn-outline{background:transparent;border:1px solid currentColor;color:inherit}.btn-light{background:var(--paper);color:var(--green)}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}.wrap{width:min(1120px,calc(100% - 36px));margin:0 auto}.welcome{margin-top:-34px;position:relative;z-index:2;background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:23px 28px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:20px}.welcome h2{font:700 23px "Playfair Display",serif;color:var(--green);margin:0 0 4px}.welcome p{margin:0;color:var(--muted);font-size:13px}.pill{border-radius:30px;padding:7px 12px;font-size:11px;font-weight:800;white-space:nowrap;background:var(--sage);color:var(--green)}.section-head{text-align:center;margin:54px auto 25px;max-width:650px}.kicker{color:#9a7846;font-size:10px;letter-spacing:2.4px;font-weight:800}.section-head h2,.panel-title{font:700 clamp(27px,4vw,38px) "Playfair Display",Georgia,serif;color:var(--green);margin:7px 0}.section-head p{color:var(--muted);font-size:14px;margin:0}.category-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:65px}.category-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:27px;box-shadow:0 8px 25px #24342c08;transition:.25s}.category-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#c8b58f}.category-icon{width:54px;height:54px;border-radius:17px;background:var(--sage);display:grid;place-items:center;font-size:25px}.category-card h3{font:700 24px "Playfair Display",serif;color:var(--green);margin:18px 0 6px}.category-card p{font-size:13px;color:var(--muted);min-height:42px;margin:0 0 18px}.card-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:17px;margin-top:17px}.card-foot small{color:var(--muted);font-size:11px}.progress-area{background:#edf1e9;border-radius:18px;padding:22px 25px;margin:0 auto 60px;max-width:740px}.progress-top{display:flex;justify-content:space-between;gap:12px;font-weight:800;font-size:13px;color:var(--green)}.progress-track{height:9px;border-radius:20px;background:#d8dfd4;overflow:hidden;margin-top:12px}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--green),#8ba48d);border-radius:20px;transition:.4s}.progress-steps{display:flex;justify-content:space-between;margin-top:9px;color:var(--muted);font-size:10px}.content{padding:42px 0 70px}.backline{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.back-btn{border:0;background:transparent;color:var(--green);font-weight:800;padding:8px 0}.page-title{font:700 clamp(30px,4vw,43px) "Playfair Display",serif;color:var(--green);margin:4px 0}.subtext{color:var(--muted);font-size:14px;margin:0}.candidate-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin-top:25px}.candidate{background:var(--paper);border:1.5px solid var(--line);border-radius:18px;padding:22px;position:relative;transition:.2s;cursor:pointer}.candidate:hover{border-color:var(--gold);transform:translateY(-2px)}.candidate.selected{border:2px solid var(--green);background:#f0f5ec;box-shadow:0 8px 25px #233f3210}.candidate-top{display:flex;justify-content:space-between;align-items:center}.candidate-no{font-size:11px;letter-spacing:2px;color:#a07843;font-weight:800}.radio-mark{width:22px;height:22px;border:1.5px solid #aab4a7;border-radius:50%;display:grid;place-items:center}.candidate.selected .radio-mark{border-color:var(--green)}.candidate.selected .radio-mark:after{content:"";width:11px;height:11px;background:var(--green);border-radius:50%}.candidate h3{font:700 22px "Playfair Display",serif;color:var(--green);margin:13px 0 9px}.candidate .philosophy{font-size:12px;color:#66736a;margin:0;line-height:1.8}.candidate .candidate-name{font-size:15px;font-weight:800;line-height:1.5;margin-top:13px;color:var(--green)}.candidate .candidate-hint{font-size:11px;color:var(--muted);margin-top:5px}.vote-actions{display:flex;justify-content:center;margin-top:27px}.vote-actions .btn{min-width:260px}.notice{background:#f2eee4;border:1px solid #e7dcc6;border-radius:13px;padding:13px 16px;color:#78623e;font-size:12px;margin-top:20px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:27px;box-shadow:0 8px 30px #24342c08}.token-wrap{max-width:560px;margin:55px auto 80px;text-align:center}.token-icon{width:68px;height:68px;margin:0 auto 18px;border-radius:22px;background:var(--sage);display:grid;place-items:center;font-size:29px}.token-wrap h1{font:700 35px "Playfair Display",serif;color:var(--green);margin:8px 0}.token-wrap>p{color:var(--muted);font-size:13px}.field{text-align:left;margin:18px 0}.field label{display:block;font-size:12px;font-weight:800;color:var(--green);margin-bottom:7px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:11px;padding:13px 14px;outline:none;color:var(--ink);font-size:13px}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px #2e473e12}.input-row{display:flex;gap:9px}.input-row input{flex:1;min-width:0}.token-note{font-size:11px;color:var(--muted);margin-top:14px}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:22px 0}.stat{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:17px}.stat span{font-size:11px;color:var(--muted);font-weight:700}.stat strong{display:block;font-size:27px;color:var(--green);margin-top:3px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.result-panel h3{font:700 22px "Playfair Display",serif;color:var(--green);margin:0 0 18px}.result-row{margin:17px 0}.result-label{display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:700}.result-label strong{color:var(--green);white-space:nowrap}.bar{height:10px;background:#e4e9e1;border-radius:20px;overflow:hidden;margin-top:8px}.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--green),#91a98f);border-radius:20px}.rank{display:inline-grid;place-items:center;width:23px;height:23px;border-radius:50%;background:var(--sage);color:var(--green);font-size:10px;margin-right:7px}.winner{display:inline-block;background:#f1e7d4;color:#886633;border-radius:30px;padding:3px 8px;font-size:9px;margin-left:5px}.result-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.result-toolbar small{color:var(--muted)}.admin-layout{display:grid;grid-template-columns:235px 1fr;gap:20px;padding:30px 0 65px}.sidebar{background:var(--green);border-radius:20px;padding:20px 13px;color:white;align-self:start;position:sticky;top:95px}.sidebar-brand{font-weight:800;padding:5px 10px 20px;border-bottom:1px solid #ffffff22;margin-bottom:12px}.sidebar-brand small{display:block;color:#c9d8cc;font-size:10px;font-weight:500}.side-link{width:100%;text-align:left;background:transparent;border:0;color:#dce6dd;padding:11px 12px;border-radius:10px;font-size:12px;font-weight:700;margin:2px 0}.side-link.active,.side-link:hover{background:#ffffff20;color:white}.admin-main{min-width:0}.admin-heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.admin-heading h1{font:700 31px "Playfair Display",serif;color:var(--green);margin:0}.admin-section{display:none}.admin-section.active{display:block}.admin-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.admin-stat{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:17px}.admin-stat small{color:var(--muted);font-size:10px;font-weight:700}.admin-stat strong{display:block;color:var(--green);font-size:25px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:13px}table{border-collapse:collapse;width:100%;min-width:560px;background:var(--paper);font-size:12px}th,td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left}th{background:#edf1e9;color:var(--green);font-size:10px;text-transform:uppercase;letter-spacing:.6px}td{color:#4c5b51}.tag{display:inline-block;border-radius:20px;padding:4px 8px;font-size:10px;font-weight:800;background:var(--sage);color:var(--green)}.tag.pending{background:#f4ead7;color:#8a6a36}.tag.off{background:#f4e5e2;color:var(--red)}.admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.btn-sm{padding:8px 11px;font-size:11px;border-radius:9px}.login-card{max-width:420px;margin:65px auto 90px}.login-card h1{font:700 31px "Playfair Display",serif;color:var(--green);margin:5px 0}.login-card p{color:var(--muted);font-size:13px}.footer{background:var(--green);color:#dce5dc;text-align:center;padding:28px 15px;font-size:11px}.footer strong{font:700 20px "Playfair Display",serif;color:#fff}.footer p{margin:5px 0}
+/* Icon system */
+.fa-solid,.fa-regular{line-height:1;vertical-align:middle}
+.brand-mark{font-size:20px;background:linear-gradient(145deg,#2e5945,#172f25);border:1px solid #ffffff20}
+.nav button span{display:inline-grid;place-items:center;width:20px;margin-right:6px;font-size:14px}
+.category-icon,.token-icon{color:var(--green);box-shadow:inset 0 0 0 1px #ffffffaa;background:linear-gradient(145deg,#edf3e9,#dce8d8)}
+.category-icon i{font-size:22px}
+.btn i{font-size:13px}
+.side-link i{width:20px;text-align:center;margin-right:7px}
+.mobile-nav{display:none}
+
+/* Pembeda kategori dan foto calon ketua */
+#votingWorkspace > .panel:first-of-type{background:linear-gradient(145deg,#fffdf8 0%,#fbf5e8 100%);border:1px solid #dfc99f}
+#votingWorkspace > .panel:nth-of-type(2){background:linear-gradient(145deg,#fbfdff 0%,#edf4fa 100%);border:1px solid #bfd2e2}
+#votingWorkspace > .panel:first-of-type .kicker{color:#98713a}
+#votingWorkspace > .panel:nth-of-type(2) .kicker{color:#315f80}
+#votingWorkspace > .panel:nth-of-type(2) .panel-title{color:#244d68}
+#ketuaCandidateGrid .candidate{display:flex;flex-direction:column;min-width:0}
+#ketuaCandidateGrid .leader-photo{width:100%;height:220px;display:block;object-fit:cover;object-position:center 25%;border-radius:13px;background:#e8edf0;border:1px solid #d7e0e7}
+#ketuaCandidateGrid .leader-photo-fallback{height:220px;display:grid;place-items:center;border-radius:13px;background:#e8edf0;color:#7890a0;font-size:54px}
+#ketuaCandidateGrid .candidate h3{font-family:"DM Sans",Arial,sans-serif;font-size:15px;line-height:1.5;overflow-wrap:anywhere}
+@media(min-width:761px) and (max-width:1050px){#ketuaCandidateGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#ketuaCandidateGrid .leader-photo,#ketuaCandidateGrid .leader-photo-fallback{height:190px}}
+@media(max-width:760px){#ketuaCandidateGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}#ketuaCandidateGrid .candidate{padding:13px}#ketuaCandidateGrid .leader-photo,#ketuaCandidateGrid .leader-photo-fallback{height:175px}}
+@media(max-width:420px){#ketuaCandidateGrid{grid-template-columns:1fr}#ketuaCandidateGrid .candidate{padding:15px}#ketuaCandidateGrid .leader-photo,#ketuaCandidateGrid .leader-photo-fallback{height:230px}}
+
+@media(max-width:760px){.topbar{height:66px;padding:0 17px}.brand-mark{width:38px;height:38px}.nav{display:none;position:absolute;top:65px;left:0;right:0;background:var(--paper);padding:12px 16px 17px;border-bottom:1px solid var(--line);box-shadow:var(--shadow);flex-direction:column;align-items:stretch}.nav.open{display:flex}.nav button{text-align:left}.menu-btn{display:block}.hero{padding:58px 17px 72px}.hero p{font-size:14px}.welcome{display:block;padding:20px;margin-top:-27px}.welcome .pill{display:inline-block;margin-top:12px}.category-grid,.candidate-grid,.result-grid{grid-template-columns:1fr}.category-card{padding:22px}.section-head{margin-top:43px}.content{padding-top:28px}.stats-grid{grid-template-columns:repeat(2,1fr)}.stat strong{font-size:23px}.panel{padding:19px}.result-toolbar{align-items:flex-start;flex-direction:column}.admin-layout{grid-template-columns:1fr;padding-top:18px}.sidebar{position:static;display:flex;overflow:auto;gap:5px;padding:10px;border-radius:13px}.sidebar-brand{display:none}.side-link{white-space:nowrap;width:auto;margin:0}.admin-cards{grid-template-columns:repeat(2,1fr)}.admin-heading h1{font-size:26px}.admin-heading{align-items:flex-start;flex-direction:column}.token-wrap{margin:35px auto 60px}.token-wrap h1{font-size:29px}.input-row{flex-direction:column}.input-row .btn{width:100%}.backline{align-items:flex-start}.vote-actions .btn{width:100%}}
+@media(max-width:390px){.wrap{width:calc(100% - 24px)}.hero h1{font-size:37px}.stats-grid{gap:8px}.stat{padding:13px}.stat strong{font-size:21px}.brand{font-size:12px}}
+
+/* Penyempurnaan foto kandidat, akses hasil, dan kartu statistik */
+#ketuaCandidateGrid{grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:16px}
+#ketuaCandidateGrid .candidate{padding:14px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+#ketuaCandidateGrid .leader-photo-wrap{width:100%;aspect-ratio:3/4;max-height:390px;overflow:hidden;border-radius:13px;background:#e9eef1;border:1px solid #d7e0e7}
+#ketuaCandidateGrid .leader-photo{width:100%;height:100%;display:block;object-fit:contain;object-position:center center;background:#e9eef1}
+#ketuaCandidateGrid .leader-photo-fallback{width:100%;height:100%;display:grid;place-items:center;color:#7890a0;font-size:54px}
+#ketuaCandidateGrid .candidate h3{font:800 clamp(12px,1.15vw,15px)/1.45 "DM Sans",Arial,sans-serif;overflow-wrap:anywhere;margin:13px 0 4px}
+#ketuaCandidateGrid .candidate-hint{margin-top:auto}
+.result-access-brand{display:flex;align-items:center;justify-content:center;gap:13px;margin:0 auto 15px}
+.result-access-brand>img{width:68px;height:68px;object-fit:contain}
+.result-access-brand .token-icon{margin:0;width:58px;height:58px;border-radius:18px;font-size:24px}
+#tokenGate{width:min(100%,560px);padding:clamp(20px,4vw,38px);overflow:hidden}
+#tokenGate h1{font-size:clamp(27px,4vw,35px);line-height:1.2}
+#tokenGate>p{max-width:420px;margin:10px auto 22px}
+.result-token-field{max-width:430px;margin:22px auto}
+.result-token-field .input-row{align-items:stretch;flex-direction:row}
+.result-token-field .input-row input{min-width:0;height:48px}
+.result-token-field .token-eye{width:52px;min-width:52px;padding:0}
+#tokenGate>.btn{max-width:430px;min-height:48px}
+.stats-grid .stat,.admin-cards .admin-stat{position:relative;overflow:hidden;min-width:0;border:1px solid transparent;box-shadow:0 8px 22px rgba(35,63,50,.06)}
+.stats-grid .stat{padding:17px 17px 17px 62px;min-height:91px}
+.stats-grid .stat:before{content:"";position:absolute;left:16px;top:19px;width:34px;height:34px;border-radius:11px;background:var(--stat-bg,#e5eee5)}
+.stats-grid .stat:after{content:"";position:absolute;left:25px;top:27px;font-family:"Font Awesome 6 Free";font-weight:900;color:var(--stat-color,var(--green));font-size:15px}
+.stats-grid .stat:nth-child(1),.admin-cards .admin-stat:nth-child(1){--stat-bg:#e6eee5;--stat-color:#315c3d;background:linear-gradient(135deg,#f5faf3,#e8f0e5);border-color:#d8e6d5}
+.stats-grid .stat:nth-child(2),.admin-cards .admin-stat:nth-child(2){--stat-bg:#e2edf7;--stat-color:#32658d;background:linear-gradient(135deg,#f5faff,#e7f0f8);border-color:#d5e3ef}
+.stats-grid .stat:nth-child(3),.admin-cards .admin-stat:nth-child(3){--stat-bg:#f7eadb;--stat-color:#a16a2d;background:linear-gradient(135deg,#fffaf3,#f8eddf);border-color:#efdfc9}
+.stats-grid .stat:nth-child(4),.admin-cards .admin-stat:nth-child(4){--stat-bg:#eee7f7;--stat-color:#76559a;background:linear-gradient(135deg,#fbf8ff,#f0eafa);border-color:#e4d9f0}
+.stats-grid .stat:nth-child(1):after,.admin-cards .admin-stat:nth-child(1):after{content:"\f0c0"}
+.stats-grid .stat:nth-child(2):after,.admin-cards .admin-stat:nth-child(2):after{content:"\f058"}
+.stats-grid .stat:nth-child(3):after,.admin-cards .admin-stat:nth-child(3):after{content:"\f017"}
+.stats-grid .stat:nth-child(4):after,.admin-cards .admin-stat:nth-child(4):after{content:"\f080"}
+.admin-cards .admin-stat{padding:17px 16px 17px 58px;min-height:83px}
+.admin-cards .admin-stat:before{content:"";position:absolute;left:14px;top:18px;width:32px;height:32px;border-radius:10px;background:var(--stat-bg)}
+.admin-cards .admin-stat:after{content:"";position:absolute;left:23px;top:26px;font-family:"Font Awesome 6 Free";font-weight:900;color:var(--stat-color);font-size:14px}
+.candidate-photo-preview{width:54px;height:68px;object-fit:contain;border-radius:7px;border:1px solid var(--line);background:#eef1ed}
+.candidate-edit-btn{white-space:nowrap}
+@media(min-width:761px) and (max-width:1050px){#ketuaCandidateGrid{grid-template-columns:repeat(2,minmax(0,1fr))}#ketuaCandidateGrid .leader-photo-wrap{max-height:440px}}
+@media(max-width:760px){
+ #ketuaCandidateGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+ #ketuaCandidateGrid .candidate{padding:11px}
+ #tokenGate{margin:28px auto 55px}
+ .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stats-grid .stat{padding:15px 10px 13px 51px;min-height:82px}
+ .stats-grid .stat:before{left:10px;top:17px;width:30px;height:30px}
+ .stats-grid .stat:after{left:18px;top:24px}
+ .admin-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .admin-cards .admin-stat{padding:14px 9px 12px 48px}
+}
+@media(max-width:420px){
+ #ketuaCandidateGrid{grid-template-columns:1fr}
+ #ketuaCandidateGrid .candidate{padding:13px}
+ #ketuaCandidateGrid .leader-photo-wrap{max-width:310px;margin:0 auto;width:100%}
+ .result-access-brand>img{width:58px;height:58px}
+ .result-token-field .input-row{gap:7px}
+ .stats-grid{gap:8px}
+ .stats-grid .stat span{font-size:10px}
+ .stats-grid .stat strong{font-size:21px}
+}
+
+
+/* ADMIN CONTROL CENTER — responsive refresh */
+.admin-login-brand{width:88px;height:88px;margin:0 auto 18px;padding:10px;background:#fff;border:1px solid #e4e9df;border-radius:24px;box-shadow:0 12px 30px rgba(35,63,50,.10);display:grid;place-items:center}
+.admin-login-brand img{width:100%;height:100%;object-fit:contain}
+.login-card{text-align:center;padding:36px 34px;border-radius:24px;background:linear-gradient(160deg,#fff 0%,#fbfcf8 100%);border:1px solid #e2e8df;box-shadow:0 22px 65px rgba(35,63,50,.12)}
+.login-card .field{text-align:left}
+.login-card h1{font-size:34px}
+.login-card .kicker{letter-spacing:2.5px}
+.password-control{position:relative;display:flex;align-items:center}
+.password-control input{padding-right:54px!important}
+.password-toggle{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:39px;height:36px;border:0;border-radius:9px;background:#edf2eb;color:#315441;display:grid;place-items:center}
+.password-toggle:hover{background:#dfe9dd}
+.admin-mode{background:#f2f5f1;min-height:100vh}
+.admin-mode .topbar,.admin-mode .footer{display:none!important}
+.admin-mode #page-admin{min-height:100vh;background:linear-gradient(135deg,#f3f6f2,#edf2ed)}
+.admin-mode #adminDashboard{width:100%;max-width:none;min-height:100vh;margin:0;padding:24px clamp(16px,3vw,42px) 35px;grid-template-columns:260px minmax(0,1fr);gap:25px;align-items:start}
+.admin-mode .sidebar{top:20px;min-height:calc(100vh - 48px);border-radius:22px;padding:22px 15px;box-shadow:0 16px 38px rgba(22,48,35,.16);background:linear-gradient(165deg,#294d3b,#172f25)}
+.admin-mode .sidebar-brand{font-size:16px;padding:8px 12px 22px}
+.admin-mode .sidebar-brand:before{content:"";display:inline-block;width:36px;height:36px;vertical-align:middle;margin-right:10px;background:url("https://mentariilmu.org/logo.png") center/contain no-repeat;background-color:#fff;border-radius:10px}
+.admin-mode .side-link{display:flex;align-items:center;min-height:44px;padding:12px 13px;font-size:13px;border-radius:11px}
+.admin-mode .side-link.active{background:#ffffff24;box-shadow:inset 3px 0 #d7bd87}
+.admin-mode .admin-main{min-width:0;padding:8px 0}
+.admin-mode .admin-heading{padding:8px 2px 20px;border-bottom:1px solid #dfe7de;margin-bottom:23px}
+.admin-mode .admin-heading h1{font-size:clamp(27px,3vw,36px);letter-spacing:-.7px}
+.admin-mode .admin-heading .kicker{font-size:10px}
+.admin-mode .admin-section>.panel,.admin-mode .admin-section .panel{border-radius:19px;box-shadow:0 9px 28px rgba(35,63,50,.055);border-color:#e3e9e1}
+.admin-mode .admin-cards{gap:15px}
+.admin-mode .admin-stat{border-radius:17px;padding-top:19px;padding-bottom:19px}
+.admin-mode .admin-stat strong{font-size:29px}
+.admin-mode .admin-actions .btn{min-height:36px}
+.admin-mode .admin-section.active{animation:adminFade .22s ease}
+@keyframes adminFade{from{opacity:.55;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.admin-mode .table-wrap{border-color:#e0e7df}
+.admin-mode table{min-width:600px}
+.admin-mode th{padding:14px;background:#edf3eb}
+.admin-mode td{padding:13px 14px}
+.admin-mode #admin-results .result-grid{gap:16px}
+.admin-mode #admin-results .result-panel{min-width:0}
+.admin-mode #admin-results .stats-grid{margin-top:15px}
+@media(max-width:900px){
+ .admin-mode #adminDashboard{grid-template-columns:1fr;gap:16px;padding:17px 16px 28px}
+ .admin-mode .sidebar{position:static;min-height:0;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:5px;padding:10px;border-radius:15px}
+ .admin-mode .sidebar-brand{display:none}
+ .admin-mode .side-link{flex:0 0 auto;width:auto;white-space:nowrap;min-height:40px;padding:10px 13px}
+ .admin-mode .side-link.active{box-shadow:inset 0 -3px #d7bd87}
+ .admin-mode .admin-main{padding:0}
+ .admin-mode .admin-heading{padding:4px 2px 16px}
+}
+@media(max-width:600px){
+ .login-card{margin:30px auto 45px;padding:27px 20px}
+ .admin-mode #adminDashboard{padding:12px 11px 24px;gap:12px}
+ .admin-mode .admin-heading{gap:8px;flex-direction:row;align-items:center}
+ .admin-mode .admin-heading h1{font-size:25px}
+ .admin-mode .admin-heading .pill{font-size:9px;padding:6px 9px}
+ .admin-mode .admin-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .admin-mode .admin-stat{padding:13px 9px 12px 46px;min-height:78px}
+ .admin-mode .admin-stat small{font-size:9px;line-height:1.35;display:block}
+ .admin-mode .admin-stat strong{font-size:23px}
+ .admin-mode .admin-stat:before{left:9px;top:15px;width:29px;height:29px}
+ .admin-mode .admin-stat:after{left:17px;top:22px}
+ .admin-mode .admin-section .panel{padding:15px}
+ .admin-mode .admin-actions{gap:6px}
+ .admin-mode .admin-actions .btn{font-size:10px;padding:8px 9px}
+ .admin-mode #admin-results .result-grid{grid-template-columns:1fr}
+ .admin-mode #admin-results .result-toolbar{gap:10px}
+ .admin-mode #admin-results .page-title{font-size:27px}
+}
+@media(max-width:380px){
+ .admin-mode .admin-heading h1{font-size:22px}
+ .admin-mode .admin-stat strong{font-size:20px}
+ .admin-mode .side-link{font-size:11px;padding:9px 11px}
+}
+
+
+/* Sidebar responsif: vertikal seperti desktop dengan kontrol tampil/sembunyi */
+.admin-mode #adminDashboard{grid-template-columns:260px minmax(0,1fr);transition:grid-template-columns .22s ease}
+.admin-mode .sidebar{display:flex;flex-direction:column;gap:5px;overflow:visible;min-width:0}
+.admin-mode .sidebar-top{display:flex;flex-direction:column;gap:12px}
+.admin-mode .sidebar-brand{display:block}
+.admin-mode .sidebar-toggle{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;border:1px solid #ffffff30;background:#ffffff12;color:#fff;border-radius:10px;padding:10px 12px;font-size:11px;font-weight:800;transition:.2s}
+.admin-mode .sidebar-toggle:hover{background:#ffffff22}
+.admin-mode .side-link{width:100%;flex:0 0 auto;white-space:normal}
+.admin-mode #adminDashboard.sidebar-collapsed{grid-template-columns:78px minmax(0,1fr)}
+.admin-mode #adminDashboard.sidebar-collapsed .sidebar{padding:17px 10px}
+.admin-mode #adminDashboard.sidebar-collapsed .sidebar-brand{font-size:0;padding:5px 0 15px;text-align:center}
+.admin-mode #adminDashboard.sidebar-collapsed .sidebar-brand:before{margin:0;width:40px;height:40px}
+.admin-mode #adminDashboard.sidebar-collapsed .sidebar-brand small{display:none}
+.admin-mode #adminDashboard.sidebar-collapsed .side-link{justify-content:center;padding:12px 5px;font-size:0}
+.admin-mode #adminDashboard.sidebar-collapsed .side-link i{font-size:16px;width:auto;margin:0}
+.admin-mode #adminDashboard.sidebar-collapsed .sidebar-toggle span{display:none}
+.admin-mode #adminDashboard.sidebar-collapsed .sidebar-toggle{padding:11px 5px}
+.admin-mode #adminDashboard.sidebar-collapsed .sidebar-toggle i{transform:rotate(180deg)}
+.result-access-brand{gap:0;margin-bottom:17px}
+.result-access-brand>img{display:block;width:86px;height:86px;object-fit:contain;margin:0 auto}
+.result-access-brand .token-icon{display:none!important}
+.topbar{width:100%;min-height:76px}
+.footer{width:100%;margin-top:35px;clear:both}
+@media(max-width:900px){
+ .admin-mode #adminDashboard,.admin-mode #adminDashboard.sidebar-collapsed{grid-template-columns:minmax(0,1fr);gap:14px;padding:16px 16px 30px}
+ .admin-mode .sidebar{position:relative;top:auto;width:100%;min-height:0;padding:14px;border-radius:16px;display:flex;flex-direction:column;overflow:visible;gap:8px}
+ .admin-mode .sidebar-top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}
+ .admin-mode .sidebar-brand,.admin-mode #adminDashboard.sidebar-collapsed .sidebar-brand{display:block;font-size:14px;padding:3px 0;border:0;margin:0}
+ .admin-mode .sidebar-brand:before,.admin-mode #adminDashboard.sidebar-collapsed .sidebar-brand:before{width:34px;height:34px;margin-right:8px}
+ .admin-mode .sidebar-brand small,.admin-mode #adminDashboard.sidebar-collapsed .sidebar-brand small{display:block;font-size:9px}
+ .admin-mode .sidebar-toggle{width:auto;min-width:42px;min-height:40px;padding:9px 12px}
+ .admin-mode #adminDashboard.sidebar-collapsed .sidebar-toggle span{display:inline}
+ .admin-mode #adminDashboard.sidebar-collapsed .sidebar-toggle i{transform:none}
+ .admin-mode .side-link{display:flex;align-items:center;justify-content:flex-start;width:100%;min-height:43px;padding:11px 13px;font-size:12px;white-space:normal;margin:0}
+ .admin-mode #adminDashboard.sidebar-collapsed .side-link{display:none}
+ .admin-mode #adminDashboard.sidebar-collapsed .sidebar{padding:12px 14px}
+ .admin-mode #adminDashboard.sidebar-collapsed .side-link i{font-size:14px;width:20px;margin-right:7px}
+ .admin-mode .side-link.active{box-shadow:inset 3px 0 #d7bd87}
+ .admin-mode .admin-main{padding:0}
+}
+@media(max-width:600px){
+ .topbar{height:auto;min-height:64px;padding:9px 13px;gap:10px}
+ .brand{min-width:0;gap:8px;font-size:11px}
+ .brand-mark{flex:0 0 36px;width:36px;height:36px}
+ .brand small{font-size:8px;letter-spacing:1px}
+ .nav{top:63px}
+ .footer{padding:24px 14px;font-size:10px;margin-top:26px}
+ .footer strong{font-size:18px}
+ .admin-mode #adminDashboard,.admin-mode #adminDashboard.sidebar-collapsed{padding:11px 10px 24px;gap:12px}
+ .admin-mode .sidebar-top{grid-template-columns:minmax(0,1fr) auto}
+ .admin-mode .sidebar-toggle{font-size:10px;padding:9px 10px}
+ .admin-mode .admin-heading{margin-bottom:17px}
+}
+@media(max-width:380px){.admin-mode .sidebar-brand{font-size:12px}.admin-mode .sidebar-toggle span{font-size:9px}}
+
+/* Mobile sidebar drawer: slide dari kiri ke kanan */
+.mobile-sidebar-open{display:none;border:0;border-radius:10px;background:var(--green);color:#fff;padding:9px 12px;font-size:11px;font-weight:800;align-items:center;gap:7px}
+.admin-drawer-backdrop{display:none}
+@media(max-width:900px){
+ .admin-mode #adminDashboard,.admin-mode #adminDashboard.sidebar-collapsed{display:block;position:relative;padding:12px 12px 28px;min-height:100vh}
+ .admin-mode .admin-main{width:100%;padding:0}
+ .admin-mode .admin-heading{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:10px;padding:5px 2px 15px}
+ .admin-mode .admin-heading-title{min-width:0}
+ .admin-mode .admin-heading-tools{display:flex;align-items:center;gap:8px}
+ .admin-mode .mobile-sidebar-open{display:inline-flex}
+ .admin-mode .sidebar{
+   position:fixed!important;z-index:1002;left:0;top:0;bottom:0;width:min(310px,86vw)!important;height:100vh;height:100dvh;
+   min-height:0!important;margin:0;border-radius:0 20px 20px 0!important;padding:20px 14px!important;
+   display:flex!important;flex-direction:column;flex-wrap:nowrap;gap:10px;overflow-y:auto!important;overflow-x:hidden!important;
+   box-shadow:12px 0 38px rgba(0,0,0,.22);transform:translateX(-105%);transition:transform .28s ease;visibility:hidden;
+ }
+ .admin-mode #adminDashboard:not(.sidebar-collapsed) .sidebar{transform:translateX(0);visibility:visible}
+ .admin-mode .sidebar-top{display:flex!important;flex-direction:row!important;align-items:center;justify-content:space-between;gap:10px}
+ .admin-mode .sidebar-brand,.admin-mode #adminDashboard.sidebar-collapsed .sidebar-brand{display:block!important;flex:1;font-size:14px!important;padding:3px 0!important;border:0!important;margin:0!important}
+ .admin-mode .sidebar-brand:before,.admin-mode #adminDashboard.sidebar-collapsed .sidebar-brand:before{width:34px;height:34px;margin-right:8px}
+ .admin-mode .sidebar-brand small,.admin-mode #adminDashboard.sidebar-collapsed .sidebar-brand small{display:block!important;font-size:9px}
+ .admin-mode .sidebar-toggle{display:inline-flex!important;width:auto!important;min-width:40px;min-height:40px;padding:9px 11px!important;flex:0 0 auto}
+ .admin-mode .sidebar-toggle span{display:none!important}
+ .admin-mode .sidebar-toggle i{transform:none!important}
+ .admin-mode .side-link,.admin-mode #adminDashboard.sidebar-collapsed .side-link{display:flex!important;align-items:center;justify-content:flex-start;width:100%;flex:0 0 auto;min-height:45px;padding:11px 13px!important;font-size:12px!important;white-space:normal;margin:0}
+ .admin-mode .side-link i{font-size:14px!important;width:20px!important;margin-right:8px!important}
+ .admin-mode .side-link.active{box-shadow:inset 3px 0 #d7bd87!important}
+ .admin-drawer-backdrop{display:block;position:fixed;inset:0;background:rgba(12,25,18,.48);z-index:1001;opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease}
+ body.admin-sidebar-open .admin-drawer-backdrop{opacity:1;visibility:visible}
+ body.admin-sidebar-open{overflow:hidden}
+}
+@media(min-width:901px){.admin-drawer-backdrop{display:none!important}.mobile-sidebar-open{display:none!important}}
+
+/* Modal administrasi: kelas dan kandidat */
+.admin-swal-popup{width:min(540px,calc(100vw - 28px))!important;padding:26px!important;border:1px solid #e1e8df!important;border-radius:22px!important;background:linear-gradient(160deg,#fff 0%,#f8faf6 100%)!important;box-shadow:0 24px 70px rgba(20,45,31,.22)!important}
+.admin-swal-title{color:#233f32!important;font:700 25px "Playfair Display",Georgia,serif!important;padding:0 0 5px!important}
+.swal-modal-kicker{font:800 9px "DM Sans",Arial,sans-serif;letter-spacing:2px;color:#a17d47}
+.admin-swal-content{margin:8px 0 0!important;color:#526157!important}
+.admin-modal-form{text-align:left}
+.modal-intro{display:flex;align-items:center;gap:13px;padding:13px 14px;margin:4px 0 20px;border:1px solid #e1e9df;border-radius:14px;background:linear-gradient(120deg,#f0f5ed,#faf7ef)}
+.modal-icon{width:42px;height:42px;flex:0 0 42px;border-radius:13px;display:grid;place-items:center;background:#dfeadd;color:#294d3b;font-size:18px}
+.modal-intro b{display:block;color:#294536;font-size:13px}
+.modal-intro small{display:block;color:#748075;font-size:10px;line-height:1.5;margin-top:3px}
+.modal-field{margin:14px 0}
+.modal-field label{display:block;color:#31513e;font-size:10px;font-weight:800;letter-spacing:.8px;margin:0 0 6px}
+.modal-field .swal2-input{display:block;width:100%!important;height:45px!important;margin:0!important;padding:0 13px!important;border:1px solid #dce4da!important;border-radius:11px!important;background:#fff!important;color:#26382e!important;font:500 13px "DM Sans",Arial,sans-serif!important;box-shadow:none!important}
+.modal-field .swal2-input:focus{border-color:#557a60!important;box-shadow:0 0 0 3px #2e473e12!important}
+.modal-field small{display:block;color:#818a80;font-size:10px;line-height:1.5;margin-top:6px}
+.modal-photo-note{display:flex;gap:9px;align-items:flex-start;padding:11px 12px;background:#f2eee4;border-radius:11px;color:#78643f;font-size:10px;line-height:1.5}
+.modal-photo-note i{font-size:15px;margin-top:1px}
+.admin-swal-confirm,.admin-swal-cancel{border:0!important;border-radius:10px!important;padding:11px 17px!important;font:700 12px "DM Sans",Arial,sans-serif!important;margin:7px 5px 0!important}
+.admin-swal-confirm{background:#233f32!important;color:#fff!important;box-shadow:0 5px 13px #233f3228!important}
+.admin-swal-cancel{background:#edf1eb!important;color:#536257!important}
+.token-admin-row{align-items:stretch}
+.token-admin-row input{min-width:0}
+@media(max-width:480px){.admin-swal-popup{padding:20px 16px!important}.admin-swal-title{font-size:22px!important}.token-admin-row{flex-direction:column}.token-admin-row .btn{width:100%}}
+
+
+/* APP PROCESS LOADER — digunakan pada akses voting, simpan suara, hasil, dan dashboard */
+#appProcessLoader{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(13,29,21,.66);backdrop-filter:blur(8px)}
+#appProcessLoader.is-active{display:flex;animation:loaderFadeIn .22s ease}
+.process-loader-card{width:min(410px,100%);padding:30px 26px 25px;text-align:center;border:1px solid rgba(255,255,255,.75);border-radius:25px;background:linear-gradient(155deg,#fffdf8 0%,#f0f5ed 100%);box-shadow:0 28px 90px rgba(0,0,0,.28);animation:loaderCardIn .35s cubic-bezier(.2,.8,.2,1)}
+.process-loader-emblem{width:76px;height:76px;margin:0 auto 18px;display:grid;place-items:center;position:relative;border-radius:23px;background:linear-gradient(145deg,#e8f0e5,#d5e4d4);color:#233f32;font-size:29px}
+.process-loader-emblem:before{content:"";position:absolute;inset:-7px;border:2px solid #c5d7c5;border-top-color:#233f32;border-radius:28px;animation:loaderSpin 1.35s linear infinite}
+.process-loader-emblem:after{content:"";position:absolute;width:9px;height:9px;right:-5px;top:5px;border-radius:50%;background:#c4a36b;box-shadow:0 0 0 5px #c4a36b25}
+.process-loader-title{margin:0;color:#233f32;font:700 24px "Playfair Display",Georgia,serif}
+.process-loader-desc{margin:8px auto 18px;max-width:300px;color:#6d796f;font-size:12px;line-height:1.65}
+.process-loader-track{height:6px;overflow:hidden;border-radius:20px;background:#dfe8dc}
+.process-loader-track:after{content:"";display:block;width:38%;height:100%;border-radius:20px;background:linear-gradient(90deg,#233f32,#8da88e,#c4a36b);animation:loaderProgress 1.45s ease-in-out infinite}
+.process-loader-foot{display:flex;justify-content:center;align-items:center;gap:7px;margin-top:14px;color:#879187;font-size:10px;font-weight:700;letter-spacing:1.3px}
+.process-loader-foot i{color:#c4a36b;font-size:9px}
+@keyframes loaderSpin{to{transform:rotate(360deg)}}
+@keyframes loaderProgress{0%{transform:translateX(-110%)}100%{transform:translateX(280%)}}
+@keyframes loaderFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes loaderCardIn{from{opacity:0;transform:translateY(13px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){#appProcessLoader *{animation-duration:2.5s!important}}
+
+</style>
+</head>
+<body>
+
+<div id="appProcessLoader" role="status" aria-live="polite" aria-hidden="true">
+ <div class="process-loader-card">
+  <div class="process-loader-emblem"><i class="fa-solid fa-shield-halved" id="processLoaderIcon"></i></div>
+  <h2 class="process-loader-title" id="processLoaderTitle">Mohon tunggu</h2>
+  <p class="process-loader-desc" id="processLoaderDesc">Sistem sedang memproses permintaan Anda.</p>
+  <div class="process-loader-track"></div>
+  <div class="process-loader-foot"><i class="fa-solid fa-circle"></i><span>MOHON JANGAN TUTUP HALAMAN</span><i class="fa-solid fa-circle"></i></div>
+ </div>
+</div>
+
+<div class="admin-drawer-backdrop" id="adminDrawerBackdrop" onclick="closeAdminSidebar()"></div>
+<header class="topbar">
+  <div class="brand"><div class="brand-mark"><i class="fa-solid fa-vote-yea"></i></div><div>E-VOTING ANGKATAN XVI<small>SMP IT MENTARI ILMU</small></div></div>
+  <nav class="nav" id="mainNav">
+    <button class="active" data-page="voting"><span><i class="fa-solid fa-house"></i></span>Voting</button>
+    <button data-page="results"><span><i class="fa-solid fa-chart-column"></i></span>Hasil Voting</button>
+    <button data-page="admin"><span><i class="fa-solid fa-user-shield"></i></span>Admin</button>
+  </nav>
+  <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+</header>
+
+<!-- HALAMAN VOTING -->
+<main class="page active" id="page-voting">
+  <section class="hero"><div class="hero-inner">
+    <div class="eyebrow">THE OFFICIAL STUDENT VOTE · 2026</div>
+    <h1>Pemilihan Angkatan <em>XVI</em></h1>
+    <p>Saatnya menentukan identitas dan pemimpin yang akan menjadi bagian dari cerita Angkatan XVI.</p>
+    <p class="tagline">SMPIT Mentari Ilmu Karawang</p>
+    <p class="tagline">One Generation. One Voice. One Legacy.</p>
+    <div class="hero-actions"><button class="btn btn-gold" onclick="document.getElementById('kategori').scrollIntoView({behavior:'smooth'})"><i class="fa-solid fa-circle-play"></i> MULAI VOTING</button><button class="btn btn-outline" onclick="showPage('results')"><i class="fa-solid fa-chart-pie"></i> AKSES HASIL VOTING</button></div>
+  </div></section>
+  <div class="wrap">
+    <section class="welcome" style="display:block">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><h2>Assalamu’alaikum, Angkatan XVI! ✨</h2><p>Masukkan token kelas untuk membuka pemilihan. Tidak perlu mengisi nama atau NIS.</p></div><span class="pill" id="votingStatusPill">● VOTING BERLANGSUNG</span></div>
+      <div style="max-width:650px;margin-top:18px"><div class="field" style="margin:0"><label for="classTokenInput">TOKEN KELAS</label><div class="input-row"><input id="classTokenInput" type="password" placeholder="Masukkan token kelas..." autocomplete="off"><button class="btn btn-primary" id="openVotingBtn" onclick="verifyClassToken()">BUKA VOTING →</button></div></div><div class="token-note" id="classAccessStatus">Gunakan token kelas yang diberikan oleh sekolah.</div></div>
+    </section>
+    <div id="votingWorkspace" class="hidden">
+      <div class="section-head" id="kategori"><div class="kicker">One Generation. One Voice. One Legacy.</div><h2>Hey, Angkatan XVI! ✨</h2><p>Ini saatnya menentukan identitas dan pemimpin angkatan kita. Kenali setiap pilihan, tentukan yang terbaik, dan jadilah bagian dari cerita Angkatan 16!</p></div>
+      <section class="panel" style="margin-bottom:22px">
+        <div class="kicker"><i class="fa-solid fa-award"></i> 01 / OUR IDENTITY</div>
+        <h2 class="panel-title">Nama Angkatan</h2>
+        <p class="subtext">Satu nama, sejuta cerita. Baca filosofinya dan pilih identitas terbaik untuk Angkatan XVI.</p>
+        <div class="candidate-grid" id="namaCandidateGrid"></div>
+      </section>
+      <section class="panel">
+        <div class="kicker"><i class="fa-solid fa-crown"></i> 02 / OUR LEADER</div>
+        <h2 class="panel-title">Ketua Angkatan</h2>
+        <p class="subtext">Empat calon, satu pemimpin. Pilih sosok yang menurutmu mampu membawa Angkatan XVI semakin solid.</p>
+        <div class="candidate-grid" id="ketuaCandidateGrid"></div>
+      </section>
+      <div class="progress-area" style="margin-top:22px"><div class="progress-top"><span><i class="fa-solid fa-list-check"></i> Kelengkapan Pilihan</span><strong id="progressText">0 dari 2 pilihan</strong></div><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div><div class="progress-steps"><span>Belum lengkap</span><span>Siap disimpan</span></div></div>
+      <div class="vote-actions"><button class="btn btn-primary" id="submitCombinedVote" onclick="submitVote()" disabled><i class="fa-solid fa-paper-plane"></i> SIMPAN KEDUA PILIHAN</button></div>
+      <div class="notice"><i class="fa-solid fa-circle-info"></i> Pastikan kedua pilihan sudah benar. Setelah disimpan, token kelas akan dikosongkan agar pemilih berikutnya dapat menggunakan token kelas yang sama.</div>
+    </div>
+    <section class="progress-area" id="lockedVotingHint"><div class="progress-top"><span><i class="fa-solid fa-lock"></i> Area Pemilihan Terkunci</span><strong>Menunggu token kelas</strong></div><p class="subtext" style="margin-top:8px">Masukkan token kelas yang valid untuk menampilkan kedua kategori pemilihan.</p></section>
+  </div>
+</main>
+
+<!-- HALAMAN AKSES DAN HASIL -->
+<section class="page" id="page-results"><div class="wrap">
+  <div class="token-wrap panel" id="tokenGate">
+    <div class="result-access-brand"><img src="https://mentariilmu.org/logo.png" alt="Logo SMP IT Mentari Ilmu" onerror="this.style.display='none'"></div><div class="kicker">RESTRICTED ACCESS · SMPK</div><h1>Akses Hasil Voting</h1>
+    <p>Masukkan kode akses khusus SMPK untuk melihat hasil pemilihan Angkatan XVI.</p>
+    <div class="field result-token-field"><label for="resultToken"><i class="fa-solid fa-key"></i> KODE AKSES SMPK</label><div class="input-row"><input id="resultToken" type="password" placeholder="Masukkan kode akses SMPK..." autocomplete="off"><button class="btn btn-outline token-eye" type="button" aria-label="Tampilkan/sembunyikan token" onclick="toggleToken()"><i class="fa-solid fa-eye"></i></button></div></div>
+    <button class="btn btn-primary" style="width:100%" id="checkResultTokenBtn" onclick="checkToken()">LIHAT HASIL VOTING →</button>
+    <div class="token-note">Token hanya digunakan untuk melihat hasil voting, bukan untuk memberikan suara.</div>
+  </div>
+  <div id="resultsContent" class="content hidden">
+    <div class="result-toolbar"><div><div class="kicker">OFFICIAL RECAPITULATION</div><h1 class="page-title">Hasil Voting Angkatan XVI</h1><small id="lastUpdated">Pembaruan terakhir: —</small></div><div class="result-actions" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="pill" id="resultStatus">HASIL SEMENTARA</span><button class="btn btn-primary btn-sm" data-html2canvas-ignore="true" onclick="renderResults()">↻ Refresh</button><button class="btn btn-outline btn-sm" data-html2canvas-ignore="true" style="color:var(--green)" onclick="copyResultsImage()"><i class="fa-regular fa-copy"></i> Salin Gambar</button><button class="btn btn-outline btn-sm" data-html2canvas-ignore="true" style="color:var(--green)" onclick="exitResults()">Keluar</button></div></div>
+    <div class="stats-grid">
+      <div class="stat" data-icon="metric"><span>Total Pemilih</span><strong id="statVoters">0</strong></div><div class="stat" data-icon="metric"><span>Sudah Memilih</span><strong id="statVoted">0</strong></div><div class="stat" data-icon="metric"><span>Belum Memilih</span><strong id="statNotVoted">0</strong></div><div class="stat" data-icon="metric"><span>Partisipasi</span><strong id="statPercent">0%</strong></div>
+    </div>
+    <div class="result-grid">
+      <div class="panel result-panel"><div class="kicker">01 / OUR IDENTITY</div><h3>Hasil Nama Angkatan</h3><div id="resultNama"></div></div>
+      <div class="panel result-panel"><div class="kicker">02 / OUR LEADER</div><h3>Hasil Ketua Angkatan</h3><div id="resultKetua"></div></div>
+    </div>
+    <div class="notice">Hasil pada versi ini tersimpan di browser yang digunakan. Data belum otomatis tersinkron antarperangkat dan belum menjadi hasil resmi.</div>
+  </div>
+</div></section>
+
+<!-- HALAMAN ADMIN -->
+<section class="page" id="page-admin">
+  <div class="wrap" id="adminLogin">
+    <div class="login-card panel"><div class="admin-login-brand"><img src="https://mentariilmu.org/logo.png" alt="Logo SMP IT Mentari Ilmu" onerror="this.style.display='none'"></div><div class="kicker">ADMINISTRATION</div><h1>Login Admin</h1><p>Masuk untuk mengelola konfigurasi E-Voting Angkatan XVI.</p>
+      <div class="field"><label>USERNAME</label><input id="adminUser" placeholder="Masukkan username" ></div>
+      <div class="field"><label for="adminPass">PASSWORD</label><div class="password-control"><input id="adminPass" type="password" placeholder="Masukkan password" autocomplete="current-password"><button class="password-toggle" type="button" onclick="toggleAdminPassword()" aria-label="Tampilkan password"><i class="fa-solid fa-eye"></i></button></div></div>
+      <button class="btn btn-primary" style="width:100%" id="adminLoginBtn" onclick="adminLogin()">MASUK DASHBOARD →</button>
+      
+    </div>
+  </div>
+  <div class="wrap admin-layout hidden" id="adminDashboard">
+    <aside class="sidebar" id="adminSidebar"><div class="sidebar-top"><div class="sidebar-brand">✦ E-Voting XVI<small>ADMIN CONTROL PANEL</small></div><button class="sidebar-toggle" type="button" onclick="toggleAdminSidebar()" aria-label="Sembunyikan atau tampilkan menu sidebar" aria-expanded="true"><i class="fa-solid fa-angles-left"></i><span>Sembunyikan Menu</span></button></div>
+      <button class="side-link active" data-admin="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</button><button class="side-link" data-admin="classes"><i class="fa-solid fa-school"></i> Daftar Kelas</button><button class="side-link" data-admin="candidates"><i class="fa-solid fa-users"></i> Data Kandidat</button><button class="side-link" data-admin="results"><i class="fa-solid fa-chart-pie"></i> Hasil Voting</button><button class="side-link" data-admin="token"><i class="fa-solid fa-key"></i> Token Hasil SMPK</button><button class="side-link" data-admin="settings"><i class="fa-solid fa-sliders"></i> Pengaturan Voting</button><button class="side-link" data-admin="logs"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Aktivitas</button><button class="side-link" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+    </aside>
+    <div class="admin-main">
+      <div class="admin-heading"><div class="admin-heading-title"><div class="kicker">CONTROL CENTER</div><h1 id="adminTitle">Dashboard</h1></div><div class="admin-heading-tools"><button class="mobile-sidebar-open" type="button" onclick="toggleAdminSidebar()" aria-label="Tampilkan menu"><i class="fa-solid fa-bars"></i> Menu</button><span class="pill">ADMINISTRATOR</span></div></div>
+      <section class="admin-section active" id="admin-dashboard">
+        <div class="admin-actions"><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="exportAdmin('excel')">Export Excel</button><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="exportAdmin('pdf')">Export PDF</button></div>
+        <div class="admin-cards"><div class="admin-stat" data-icon="metric"><small>Total Siswa</small><strong id="aTotal">0</strong></div><div class="admin-stat" data-icon="metric"><small>Sudah Berpartisipasi</small><strong id="aVoted">0</strong></div><div class="admin-stat" data-icon="metric"><small>Belum Berpartisipasi</small><strong id="aNotVoted">0</strong></div><div class="admin-stat" data-icon="metric"><small>Partisipasi</small><strong id="aPercent">0%</strong></div></div>
+        <div class="panel"><h3 style="margin:0;color:var(--green)">Ringkasan Pemilihan</h3><p class="subtext">Ringkasan data kelas dan suara simulasi yang tersimpan pada browser ini.</p><div class="stats-grid" style="grid-template-columns:repeat(2,1fr)"><div class="stat"><span>Total Suara Nama Angkatan</span><strong id="aNamaVotes">0</strong></div><div class="stat"><span>Total Suara Ketua Angkatan</span><strong id="aKetuaVotes">0</strong></div></div></div>
+      </section>
+      <section class="admin-section" id="admin-results">
+        <div class="result-toolbar"><div><div class="kicker">OFFICIAL RECAPITULATION</div><small id="adminLastUpdated">Ringkasan hasil pemilihan Angkatan XVI</small></div><div class="result-actions" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="renderResults(true)"><i class="fa-solid fa-rotate"></i> Refresh</button><button class="btn btn-outline btn-sm" style="color:var(--green)" data-html2canvas-ignore="true" onclick="copyResultsImage('admin-results',this)"><i class="fa-regular fa-copy"></i> Salin Gambar</button></div></div>
+        <div class="stats-grid">
+          <div class="stat"><span>Total Pemilih</span><strong id="adminStatVoters">0</strong></div><div class="stat"><span>Sudah Memilih</span><strong id="adminStatVoted">0</strong></div><div class="stat"><span>Belum Memilih</span><strong id="adminStatNotVoted">0</strong></div><div class="stat"><span>Partisipasi</span><strong id="adminStatPercent">0%</strong></div>
+        </div>
+        <div class="result-grid">
+          <div class="panel result-panel"><div class="kicker">01 / OUR IDENTITY</div><h3>Hasil Nama Angkatan</h3><div id="adminResultNama"></div></div>
+          <div class="panel result-panel"><div class="kicker">02 / OUR LEADER</div><h3>Hasil Ketua Angkatan</h3><div id="adminResultKetua"></div></div>
+        </div>
+      </section>
+      <section class="admin-section" id="admin-classes">
+        <div class="panel">
+          <div class="admin-heading"><div><h3 style="margin:0;color:var(--green)">Daftar Kelas</h3><p class="subtext">Kelola token kelas dan jumlah siswa.</p></div><div class="admin-actions"><button class="btn btn-primary btn-sm" onclick="editClass()">＋ Tambah Kelas</button><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="exportAdmin('excel')">Export Excel</button><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="exportAdmin('pdf')">Export PDF</button></div></div>
+          <div class="admin-cards"><div class="admin-stat"><small>Total Kelas</small><strong id="classTotal">4</strong></div><div class="admin-stat"><small>Total Siswa</small><strong id="classStudents">0</strong></div><div class="admin-stat"><small>Sudah Berpartisipasi</small><strong id="classParticipated">0</strong></div><div class="admin-stat"><small>Belum Berpartisipasi</small><strong id="classRemaining">0</strong></div></div>
+          <div class="table-wrap"><table><thead><tr><th>No.</th><th>Nama Kelas</th><th>Token Kelas</th><th>Jumlah Siswa</th><th>Berpartisipasi</th><th>Selisih</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="classTable"></tbody></table></div>
+        </div>
+      </section>
+      <section class="admin-section" id="admin-candidates">
+        <div class="panel"><div class="admin-actions"><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="exportAdmin('excel')">Export Excel</button><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="exportAdmin('pdf')">Export PDF</button></div><h3 style="margin-top:0;color:var(--green)">Kandidat Nama Angkatan</h3><div class="table-wrap"><table><thead><tr><th>No.</th><th>Nama Kandidat</th><th>Jumlah Suara</th></tr></thead><tbody id="candidateNamaTable"></tbody></table></div><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:25px 0 12px"><h3 style="color:var(--green);margin:0">Kandidat Ketua Angkatan</h3><button class="btn btn-primary btn-sm" onclick="editCandidate()">＋ Tambah Kandidat</button></div><div class="table-wrap"><table><thead><tr><th>No.</th><th>Foto</th><th>Nama Kandidat</th><th>URL Foto</th><th>Jumlah Suara</th><th>Aksi</th></tr></thead><tbody id="candidateKetuaTable"></tbody></table></div></div>
+      </section>
+      <section class="admin-section" id="admin-token">
+        <div class="panel" style="max-width:650px"><div class="admin-actions"><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="exportAdmin('excel')">Export Excel</button><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="exportAdmin('pdf')">Export PDF</button></div><h3 style="margin-top:0;color:var(--green)">Pengaturan Token Hasil SMPK</h3><p class="subtext">Token demo disimpan pada localStorage browser. Ini bukan penyimpanan aman untuk penggunaan resmi.</p><div class="field"><label for="adminToken">TOKEN AKSES HASIL</label><div class="input-row token-admin-row"><input id="adminToken" type="text" autocomplete="off" placeholder="Masukkan token akses hasil"><button type="button" class="btn btn-outline" style="color:var(--green);white-space:nowrap" onclick="copyAdminToken()"><i class="fa-regular fa-copy"></i> Salin Token</button></div></div><div style="display:flex;align-items:center;gap:10px;margin:15px 0"><input type="checkbox" id="tokenEnabled" style="width:17px;height:17px"><label for="tokenEnabled" style="font-size:13px;font-weight:700">Token aktif</label></div><button class="btn btn-primary" onclick="saveToken()">SIMPAN PENGATURAN TOKEN</button></div>
+      </section>
+      <section class="admin-section" id="admin-settings">
+        <div class="panel" style="max-width:700px"><div class="admin-actions"><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="exportAdmin('excel')">Export Excel</button><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="exportAdmin('pdf')">Export PDF</button></div><h3 style="margin-top:0;color:var(--green)">Pengaturan Voting</h3><div class="field"><label>JUDUL PEMILIHAN</label><input value="E-Voting Angkatan XVI SMP IT Mentari Ilmu"></div><div class="field"><label>STATUS VOTING</label><select id="voteStatus"><option>Berlangsung</option><option>Belum Dimulai</option><option>Ditutup</option></select></div><div class="field"><label>PUBLIKASI HASIL</label><select><option>Hasil sementara dapat dilihat</option><option>Hasil akhir setelah voting ditutup</option></select></div><button class="btn btn-primary" onclick="saveSettings()">SIMPAN PENGATURAN</button></div>
+      </section>
+      <section class="admin-section" id="admin-logs"><div class="panel"><div class="admin-actions"><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="exportAdmin('excel')">Export Excel</button><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="exportAdmin('pdf')">Export PDF</button></div><h3 style="margin-top:0;color:var(--green)">Riwayat Aktivitas</h3><p class="subtext">Aktivitas demo pada browser ini.</p><div id="logList"></div></div></section>
+    </div>
+  </div>
+</section>
+
+<footer class="footer"><strong>One Generation. One Legacy.</strong><p>SMP IT Mentari Ilmu Karawang</p>© 2026 — E-Voting Angkatan XVI</footer>
+
+<script>
+const DATA={
+ nama:[
+  {nama:"SIXTEERNAL",filosofi:"Sixteernal mengambil dari kata Eternal, artinya kekal. Angkatan 16 adalah angkatan yang solid, tidak akan terpecah belah, dan akan selalu bersama."},
+  {nama:"NEXAVORA XVI",filosofi:"Satu ikatan, sejuta kekuatan. Satu generasi yang disatukan oleh perjuangan, diperkuat oleh perbedaan, dan dikenang melalui karya. Bukan sekadar teman satu angkatan, tetapi keluarga yang meninggalkan jejak."},
+  {nama:"XVIORA UNITY",filosofi:"Melambangkan angkatan ke-16 yang bersatu dalam perbedaan, saling menguatkan, dan tumbuh bersama untuk menciptakan kenangan serta warisan yang bermakna."},
+  {nama:"XVICTORIAN",filosofi:"Xea/Sea dimaknai sebagai perjalanan yang luas, penuh tantangan, dan tidak selalu mulus. Victorian melambangkan keberhasilan dan kemenangan bersama. Angkatan 16 yang tak putus asa menghadapi tantangan, gelombang, dan arus hingga mencapai kemenangan."}
+ ],
+ ketua:[
+  {nama:"MUHAMMAD ALDYTH ALROYGIAN RUSTANDI",foto:"1rsgiDsdGV_hXHmHpUJAbREnJ792WuOvl"},
+  {nama:"ALFARIZI ARSYAD SAPUTRA",foto:"1h08KaY2tdsBizKSqV6Hw88Itaord0Jtw"},
+  {nama:"REYFANI BERLIAN",foto:"1SThLnCj7jQuiu4NRojtDrMgDsb9ghSpo"},
+  {nama:"JANEETA NAZHMI GHAISANI",foto:"1ThN29CVgg03NLHBC3JbBC3jp1slb-j7p"}
+ ]
+};
+
+// ============================================================
+// KONEKSI GOOGLE APPS SCRIPT
+// ============================================================
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw5RMMjTvL5BKPJALBWTUFHYNGp9SNk3nljXUS0aCPcvo-GCxJzJMYKp6q18fSjSEijrg/exec';
+
+async function apiRequest(action, data = {}) {
+ if(!APPS_SCRIPT_URL) throw new Error("URL Google Apps Script belum dikonfigurasi.");
+ const response = await fetch(APPS_SCRIPT_URL,{
+  method:"POST",
+  headers:{"Content-Type":"text/plain;charset=utf-8"},
+  body:JSON.stringify({action,...data})
+ });
+ const raw=await response.text();
+ let result;
+ try{result=JSON.parse(raw)}catch(e){throw new Error("Respons server bukan JSON. Pastikan deployment Apps Script sudah benar dan dapat diakses.");}
+ if(!response.ok || !result || result.status!=="success") throw new Error(result?.message||"Permintaan ke database gagal.");
+ return result;
+}
+
+const KEY="mentari_xvi_class_token_demo_v2";
+const defaultClasses=[
+ {name:"Al Batani",token:"BATANI",students:25,enabled:true,participation:0},
+ {name:"Ibnu Khaldun",token:"KHALDUN",students:25,enabled:true,participation:0},
+ {name:"Ummu Aiman",token:"UMAI",students:25,enabled:true,participation:0},
+ {name:"Ummu Salamah",token:"UMSAL",students:25,enabled:true,participation:0}
+];
+const defaults={votes:{nama:[0,0,0,0],ketua:[0,0,0,0]},classes:defaultClasses,token:"SMPK-XVI-2026",tokenEnabled:true,status:"Berlangsung",logs:[]};
+let resultsUnlocked=false,classUnlocked=false,currentClassIndex=null,currentClassToken="";
+let selectedChoices={nama:null,ketua:null};
+function load(){try{return {...defaults,...JSON.parse(localStorage.getItem(KEY)||"{}")}}catch(e){return JSON.parse(JSON.stringify(defaults))}}
+let state=load();
+state.candidates=state.candidates||{};
+state.candidates.ketua=Array.isArray(state.candidates.ketua)&&state.candidates.ketua.length===4?state.candidates.ketua:DATA.ketua.map(x=>({...x}));
+DATA.ketua=state.candidates.ketua.map((x,i)=>({...DATA.ketua[i],...x}));
+if(!Array.isArray(state.classes)||!state.classes.length)state.classes=JSON.parse(JSON.stringify(defaultClasses));
+state.classes=state.classes.map((c,i)=>({...defaultClasses[i],...c}));
+state.votes=state.votes||{nama:[0,0,0,0],ketua:[0,0,0,0]};
+state.votes.nama=Array.from({length:4},(_,i)=>Number(state.votes.nama?.[i]||0));
+state.votes.ketua=Array.from({length:4},(_,i)=>Number(state.votes.ketua?.[i]||0));
+state.logs=state.logs||[];
+function save(){
+ try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+ if(adminSessionKey){
+  return apiRequest("adminSaveState",{sessionKey:adminSessionKey,state:{
+   classes:state.classes,
+   candidates:{nama:DATA.nama,ketua:DATA.ketua},
+   token:state.token,tokenEnabled:state.tokenEnabled,status:state.status,
+   logs:state.logs
+  }}).then(res=>{if(res.state)applyServerState(res.state);return res;})
+    .catch(err=>{console.error("Gagal menyimpan pengaturan:",err);Swal.fire("Gagal menyimpan",err.message||"Periksa koneksi database.","error");throw err;});
+ }
+ return Promise.resolve();
+}
+function log(msg){state.logs.unshift({msg,time:new Date().toLocaleString("id-ID")});state.logs=state.logs.slice(0,50);save();}
+
+function showProcessLoader(title,description,icon="fa-shield-halved"){
+ const overlay=document.getElementById("appProcessLoader");
+ if(!overlay)return;
+ document.getElementById("processLoaderTitle").textContent=title||"Mohon tunggu";
+ document.getElementById("processLoaderDesc").textContent=description||"Sistem sedang memproses permintaan Anda.";
+ document.getElementById("processLoaderIcon").className="fa-solid "+icon;
+ overlay.classList.add("is-active");
+ overlay.setAttribute("aria-hidden","false");
+ document.body.style.overflow="hidden";
+}
+function hideProcessLoader(){
+ const overlay=document.getElementById("appProcessLoader");
+ if(!overlay)return;
+ overlay.classList.remove("is-active");
+ overlay.setAttribute("aria-hidden","true");
+ document.body.style.overflow="";
+}
+
+async function verifyClassToken(){
+ const token=document.getElementById("classTokenInput").value.trim().toUpperCase();
+ if(!token){Swal.fire("Token kelas diperlukan","Masukkan token kelas terlebih dahulu.","warning");return;}
+ const btn=document.getElementById("openVotingBtn");
+ const oldHTML=btn?btn.innerHTML:"";
+ if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> MEMERIKSA TOKEN...';}
+ showProcessLoader("Memeriksa Token Kelas","Menghubungkan ke database dan memvalidasi akses voting kelas Anda.","fa-key");
+ try{
+  const res=await apiRequest("verifyClassToken",{token});
+  state.classes=res.classes||state.classes;
+  const idx=state.classes.findIndex(c=>String(c.id)===String(res.classId));
+  if(idx<0)throw new Error("Data kelas tidak ditemukan.");
+  currentClassToken=token;
+  if(state.status!=="Berlangsung"){Swal.fire("Voting tidak tersedia","Status voting saat ini: "+state.status,"warning");return;}
+  currentClassIndex=idx;classUnlocked=true;selectedChoices={nama:null,ketua:null};
+  document.getElementById("classAccessStatus").innerHTML='<i class="fa-solid fa-circle-check"></i> Akses terbuka untuk <b>'+state.classes[idx].name+'</b>. Silakan isi kedua pilihan.';
+  document.getElementById("classAccessStatus").style.color="var(--green)";
+  document.getElementById("votingWorkspace").classList.remove("hidden");
+  document.getElementById("lockedVotingHint").classList.add("hidden");
+  document.getElementById("classTokenInput").value="";
+  renderVotingCandidates();updateProgress();
+  log("Akses voting dibuka untuk kelas "+state.classes[idx].name+".");
+  document.getElementById("votingWorkspace").scrollIntoView({behavior:"smooth",block:"start"});
+  Swal.fire({title:"Token kelas valid",text:"Silakan pilih Nama Angkatan dan Ketua Angkatan pada halaman yang sama.",icon:"success",confirmButtonColor:"#233f32"});
+ }catch(err){Swal.fire("Gagal memeriksa token",err.message||"Periksa koneksi database.","error");}
+ finally{
+  hideProcessLoader();
+  if(btn){btn.disabled=false;btn.innerHTML=oldHTML;}
+ }
+}
+function showPage(name){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById("page-"+name).classList.add("active");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===name));
+ document.getElementById("mainNav").classList.remove("open");
+ if(name==="results"){resultsUnlocked?renderResults():document.getElementById("tokenGate").classList.remove("hidden")}
+ if(name==="admin")refreshAdmin();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+document.getElementById("menuBtn").onclick=()=>document.getElementById("mainNav").classList.toggle("open");
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeAdminSidebar();});
+document.getElementById("adminPass").addEventListener("keydown",e=>{if(e.key==="Enter")adminLogin();});
+document.getElementById("classTokenInput").addEventListener("keydown",e=>{if(e.key==="Enter")verifyClassToken();});
+function renderVotingCandidates(){
+ for(const type of ["nama","ketua"]){
+  const grid=document.getElementById(type+"CandidateGrid");
+  grid.innerHTML="";
+  DATA[type].forEach((item,i)=>{
+   const card=document.createElement("article");
+   card.className="candidate";
+   card.setAttribute("role","button");
+   card.setAttribute("tabindex","0");
+   card.onclick=()=>selectCandidate(type,i);
+   card.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectCandidate(type,i)}};
+   const portrait=type==="ketua" ? `
+    <div class="leader-photo-wrap">
+     <img class="leader-photo" src="${getDrivePhotoUrl(item.foto)}" alt="Foto ${item.nama}" loading="eager" referrerpolicy="no-referrer" onerror="handleCandidatePhotoError(this,'${item.foto}')">
+    </div>` : "";
+   card.innerHTML=`
+    <div class="candidate-top"><span class="candidate-no">OPTION ${(i+1).toString().padStart(2,"0")}</span><span class="radio-mark"></span></div>
+    ${portrait}
+    <h3>${item.nama}</h3>
+    ${item.filosofi?`<p class="philosophy">${item.filosofi}</p>`:`<p class="candidate-hint"><i class="fa-solid fa-user-tie"></i> Calon Ketua Angkatan XVI</p>`}`;
+   grid.appendChild(card);
+  });
+ }
+}
+function getDrivePhotoUrl(value){
+ const raw=String(value||"").trim();
+ if(!raw)return "";
+ const match=raw.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/);
+ const id=match?match[1]:raw;
+ return /^https?:\/\//i.test(raw) && !match ? raw : `https://drive.google.com/thumbnail?id=${id}&sz=w1200`;
+}
+function handleCandidatePhotoError(img,value){
+ if(!img.dataset.retry){
+  img.dataset.retry="1";
+  const raw=String(value||"").trim();
+  const match=raw.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/);
+  const id=match?match[1]:raw;
+  img.src=`https://drive.google.com/uc?export=view&id=${id}`;
+  return;
+ }
+ const wrap=img.closest(".leader-photo-wrap");
+ if(wrap)wrap.innerHTML='<div class="leader-photo-fallback"><i class="fa-solid fa-user-tie"></i></div>';
+}
+function selectCandidate(type,i){
+ if(!classUnlocked)return;
+ selectedChoices[type]=i;
+ const grid=document.getElementById(type+"CandidateGrid");
+ grid.querySelectorAll(".candidate").forEach((c,n)=>c.classList.toggle("selected",n===i));
+ updateProgress();
+}
+async function submitVote(){
+ if(!classUnlocked||currentClassIndex===null){Swal.fire("Token kelas diperlukan","Masukkan token kelas terlebih dahulu.","warning");return;}
+ if(selectedChoices.nama===null||selectedChoices.ketua===null){Swal.fire("Pilihan belum lengkap","Pilih satu Nama Angkatan dan satu Ketua Angkatan sebelum menyimpan.","warning");return;}
+ const nama=DATA.nama[selectedChoices.nama].nama,ketua=DATA.ketua[selectedChoices.ketua].nama;
+ const confirm=await Swal.fire({title:"Konfirmasi kedua pilihan",html:`<div style="text-align:left"><p><b><i class="fa-solid fa-award"></i> Nama Angkatan</b><br>${nama}</p><p><b><i class="fa-solid fa-crown"></i> Ketua Angkatan</b><br>${ketua}</p><small>Pastikan pilihan sudah benar. Kedua suara akan disimpan sekaligus.</small></div>`,icon:"question",showCancelButton:true,confirmButtonText:"Ya, simpan voting",cancelButtonText:"Periksa kembali",confirmButtonColor:"#233f32"});
+ if(!confirm.isConfirmed)return;
+ const btn=document.getElementById("submitCombinedVote");
+ const oldHTML=btn.innerHTML;
+ try{
+  btn.disabled=true;
+  btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> MENYIMPAN...';
+  showProcessLoader("Menyimpan Suara Anda","Pilihan Nama Angkatan dan Ketua Angkatan sedang dikirim dan diamankan ke database.","fa-cloud-arrow-up");
+  const result=await apiRequest("submitVote",{
+   classToken:currentClassToken,
+   namaIndex:selectedChoices.nama,
+   ketuaIndex:selectedChoices.ketua
+  });
+  applyServerState(result.state);
+  classUnlocked=false;currentClassIndex=null;currentClassToken="";selectedChoices={nama:null,ketua:null};
+  document.getElementById("classTokenInput").value="";
+  document.getElementById("classAccessStatus").innerHTML='<i class="fa-solid fa-key"></i> Token telah direset. Pemilih berikutnya dapat memasukkan token kelas.';
+  document.getElementById("votingWorkspace").classList.add("hidden");
+  document.getElementById("lockedVotingHint").classList.remove("hidden");
+  updateProgress();
+  hideProcessLoader();
+  await Swal.fire({title:"Voting berhasil disimpan!",html:"Suara berhasil masuk ke database.<br><b>Token kelas telah direset.</b>",icon:"success",confirmButtonColor:"#233f32"});
+ }catch(err){
+  hideProcessLoader();
+  await Swal.fire("Voting belum tersimpan",err.message||"Terjadi kesalahan saat menyimpan suara.","error");
+ }finally{
+  btn.innerHTML=oldHTML;
+  updateProgress();
+ }
+}
+function updateProgress(){
+ const n=Object.values(selectedChoices).filter(v=>v!==null).length;
+ document.getElementById("progressText").textContent=n+" dari 2 pilihan";
+ document.getElementById("progressFill").style.width=(n/2*100)+"%";
+ document.getElementById("submitCombinedVote").disabled=n!==2;
+ document.getElementById("votingStatusPill").textContent="● "+state.status.toUpperCase();
+}
+function toggleToken(){const i=document.getElementById("resultToken");i.type=i.type==="password"?"text":"password";}
+async function checkToken(){
+ const val=document.getElementById("resultToken").value.trim();
+ if(!val){Swal.fire("Token diperlukan","Masukkan token akses hasil SMPK.","warning");return;}
+ const btn=document.getElementById("checkResultTokenBtn");
+ const oldHTML=btn?btn.innerHTML:"";
+ if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> MEMBUKA HASIL...';}
+ showProcessLoader("Memverifikasi Kode Akses","Memeriksa kode akses SMPK dan mengambil rekapitulasi hasil voting.","fa-chart-column");
+ try{
+  const res=await apiRequest("verifyResultToken",{token:val});
+  applyServerState(res.state);
+  resultsUnlocked=true;
+  document.getElementById("tokenGate").classList.add("hidden");
+  document.getElementById("resultsContent").classList.remove("hidden");
+  renderResults();
+ }catch(err){Swal.fire("Akses ditolak",err.message||"Kode akses tidak valid.","error");}
+ finally{
+  hideProcessLoader();
+  if(btn){btn.disabled=false;btn.innerHTML=oldHTML;}
+ }
+}
+function exitResults(){resultsUnlocked=false;document.getElementById("resultToken").value="";document.getElementById("resultsContent").classList.add("hidden");document.getElementById("tokenGate").classList.remove("hidden");}
+
+async function copyResultsImage(targetId="resultsContent",triggerBtn=null){
+ const target=document.getElementById(targetId);
+ if(!target){Swal.fire("Hasil belum tersedia","Bagian hasil voting tidak ditemukan.","info");return;}
+ if(!window.html2canvas){Swal.fire("Fitur belum tersedia","Library pembuat gambar belum termuat. Periksa koneksi internet lalu coba lagi.","warning");return;}
+ const btn=triggerBtn||document.querySelector("#resultsContent .result-actions button[onclick*='copyResultsImage']");
+ const oldText=btn?btn.innerHTML:"";
+ try{
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Membuat gambar...';}
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  const canvas=await html2canvas(target,{backgroundColor:"#f6f2e9",scale:2,useCORS:true,allowTaint:false,logging:false,windowWidth:Math.max(document.documentElement.clientWidth,target.scrollWidth),onclone:doc=>{doc.querySelectorAll("[data-html2canvas-ignore='true']").forEach(el=>el.style.display="none");}});
+  const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Gagal membuat file gambar.")),"image/png"));
+  if(navigator.clipboard&&window.ClipboardItem&&navigator.clipboard.write){
+   await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);
+   Swal.fire({icon:"success",title:"Gambar berhasil disalin",html:"Buka WhatsApp, pilih chat tujuan, lalu tekan <b>Ctrl + V</b> atau pilih <b>Tempel</b>. Yang ditempel adalah gambar hasil voting."});
+  }else{
+   const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="hasil-voting-angkatan-xvi-admin.png";a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);
+   Swal.fire({icon:"info",title:"Gambar berhasil dibuat",text:"Browser belum mendukung salin gambar langsung. File PNG diunduh; lampirkan sebagai gambar di WhatsApp."});
+  }
+ }catch(err){console.error("Salin gambar hasil voting:",err);Swal.fire("Belum berhasil menyalin gambar","Izinkan akses clipboard pada browser dan pastikan halaman dibuka melalui HTTPS. Detail: "+(err.message||"Clipboard tidak tersedia"),"warning");}
+ finally{if(btn){btn.disabled=false;btn.innerHTML=oldText;}}
+}
+async function copyAdminToken(){
+ const input=document.getElementById("adminToken"),value=input?.value.trim();
+ if(!value){Swal.fire("Token kosong","Belum ada token untuk disalin.","info");return;}
+ try{
+  if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);}
+  else{input.focus();input.select();if(!document.execCommand("copy"))throw new Error("Salin otomatis tidak didukung browser.");}
+  Swal.fire({icon:"success",title:"Token berhasil disalin",text:"Token akses hasil SMPK sudah tersalin ke clipboard."});
+ }catch(err){input.focus();input.select();Swal.fire("Salin otomatis gagal","Token sudah dipilih. Tekan Ctrl + C untuk menyalinnya.","warning");}
+}
+
+function renderResults(forAdmin=false){
+ if(!resultsUnlocked&&!forAdmin)return;
+ const totalVoters=state.classes.reduce((n,c)=>n+Number(c.students||0),0);
+ const voted=state.classes.reduce((n,c)=>n+Number(c.participation||0),0);
+ document.getElementById("statVoters").textContent=totalVoters;document.getElementById("statVoted").textContent=voted;document.getElementById("statNotVoted").textContent=Math.max(0,totalVoters-voted);document.getElementById("statPercent").textContent=totalVoters?Math.round(voted/totalVoters*100)+"%":"0%";
+ if(forAdmin){document.getElementById("adminStatVoters").textContent=totalVoters;document.getElementById("adminStatVoted").textContent=voted;document.getElementById("adminStatNotVoted").textContent=Math.max(0,totalVoters-voted);document.getElementById("adminStatPercent").textContent=totalVoters?Math.round(voted/totalVoters*100)+"%":"0%";}
+  if(forAdmin){document.getElementById("adminStatVoters").textContent=totalVoters;document.getElementById("adminStatVoted").textContent=voted;document.getElementById("adminStatNotVoted").textContent=Math.max(0,totalVoters-voted);document.getElementById("adminStatPercent").textContent=totalVoters?Math.round(voted/totalVoters*100)+"%":"0%";}
+ for(const type of ["nama","ketua"]){
+  const total=state.votes[type].reduce((a,b)=>a+b,0),target=document.getElementById(type==="nama"?"resultNama":"resultKetua");target.innerHTML="";
+  const ranked=DATA[type].map((d,i)=>({...d,index:i,votes:state.votes[type][i]})).sort((a,b)=>b.votes-a.votes);
+  ranked.forEach((d,rank)=>{const pct=total?d.votes/total*100:0,row=document.createElement("div");row.className="result-row";row.innerHTML=`<div class="result-label"><span><i class="rank">${rank+1}</i>${d.nama}${rank===0&&total?'<b class="winner">TERTINGGI</b>':""}</span><strong>${d.votes} suara · ${pct.toFixed(1)}%</strong></div><div class="bar"><i style="width:${pct}%"></i></div>`;target.appendChild(row);});
+  const foot=document.createElement("small");foot.style.color="var(--muted)";foot.textContent="Total suara: "+total;target.appendChild(foot);
+ }
+ if(forAdmin){document.getElementById("adminResultNama").innerHTML=document.getElementById("resultNama").innerHTML;document.getElementById("adminResultKetua").innerHTML=document.getElementById("resultKetua").innerHTML;document.getElementById("adminLastUpdated").textContent="Diperbarui: "+new Date().toLocaleString("id-ID");}
+ document.getElementById("resultStatus").textContent=state.status==="Ditutup"?"HASIL AKHIR":"HASIL SEMENTARA";
+ document.getElementById("lastUpdated").textContent="Pembaruan terakhir: "+new Date().toLocaleString("id-ID");
+}
+async function adminLogin(){
+ const username=document.getElementById("adminUser").value.trim();
+ const password=document.getElementById("adminPass").value;
+ const btn=document.getElementById("adminLoginBtn");
+ const oldHTML=btn?btn.innerHTML:"";
+ if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> MEMUAT DASHBOARD...';}
+ showProcessLoader("Menyiapkan Dashboard","Memverifikasi akun administrator dan memuat data terbaru dari database.","fa-gauge-high");
+ try{
+  const res=await apiRequest("adminLogin",{username,password});
+  adminSessionKey=res.sessionKey;
+  applyServerState(res.state);
+  document.getElementById("adminLogin").classList.add("hidden");
+  document.getElementById("adminDashboard").classList.remove("hidden");
+  document.getElementById("adminDashboard").classList.toggle("sidebar-collapsed",window.matchMedia("(max-width: 900px)").matches);
+  const sbToggle=document.querySelector(".sidebar-toggle");
+  if(sbToggle){const isSmall=window.matchMedia("(max-width: 900px)").matches;sbToggle.setAttribute("aria-expanded",String(!isSmall));sbToggle.querySelector("span").textContent=isSmall?"Tampilkan Menu":"Sembunyikan Menu";sbToggle.querySelector("i").className=isSmall?"fa-solid fa-angles-right":"fa-solid fa-angles-left";}
+  document.body.classList.add("admin-mode");document.body.classList.remove("admin-sidebar-open");
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-admin").classList.add("active");
+  document.querySelectorAll(".side-link").forEach(x=>x.classList.toggle("active",x.dataset.admin==="dashboard"));
+  document.querySelectorAll(".admin-section").forEach(x=>x.classList.toggle("active",x.id==="admin-dashboard"));
+  document.getElementById("adminTitle").textContent="Dashboard";
+  await refreshAdmin();
+  window.scrollTo({top:0,behavior:"instant"});
+ }catch(err){Swal.fire("Login gagal",err.message||"Username atau password tidak sesuai.","error");}
+ finally{
+  hideProcessLoader();
+  if(btn){btn.disabled=false;btn.innerHTML=oldHTML;}
+ }
+}
+function toggleAdminPassword(){const input=document.getElementById("adminPass"),btn=document.querySelector(".password-toggle i");input.type=input.type==="password"?"text":"password";btn.className=input.type==="password"?"fa-solid fa-eye":"fa-solid fa-eye-slash";}
+function toggleAdminSidebar(){
+ const dashboard=document.getElementById("adminDashboard");
+ const sidebar=document.getElementById("adminSidebar");
+ const btn=sidebar.querySelector(".sidebar-toggle");
+ const isMobile=window.matchMedia("(max-width: 900px)").matches;
+ if(isMobile){
+   const willOpen=dashboard.classList.contains("sidebar-collapsed");
+   dashboard.classList.toggle("sidebar-collapsed",!willOpen);
+   document.body.classList.toggle("admin-sidebar-open",willOpen);
+   btn.setAttribute("aria-expanded",String(willOpen));
+   btn.setAttribute("aria-label",willOpen?"Tutup menu":"Tampilkan menu");
+   btn.querySelector("i").className=willOpen?"fa-solid fa-xmark":"fa-solid fa-bars";
+   const mobileBtn=document.querySelector(".mobile-sidebar-open");
+   if(mobileBtn)mobileBtn.setAttribute("aria-expanded",String(willOpen));
+   return;
+ }
+ const collapsed=dashboard.classList.toggle("sidebar-collapsed");
+ btn.setAttribute("aria-expanded",String(!collapsed));
+ btn.querySelector("span").textContent=collapsed?"Tampilkan Menu":"Sembunyikan Menu";
+ btn.querySelector("i").className=collapsed?"fa-solid fa-angles-right":"fa-solid fa-angles-left";
+}
+function closeAdminSidebar(){
+ const dashboard=document.getElementById("adminDashboard");
+ if(!window.matchMedia("(max-width: 900px)").matches)return;
+ dashboard.classList.add("sidebar-collapsed");
+ document.body.classList.remove("admin-sidebar-open");
+ const btn=document.querySelector("#adminSidebar .sidebar-toggle");
+ if(btn){btn.setAttribute("aria-expanded","false");btn.querySelector("i").className="fa-solid fa-bars";}
+ const mobileBtn=document.querySelector(".mobile-sidebar-open");
+ if(mobileBtn)mobileBtn.setAttribute("aria-expanded","false");
+}
+function adminLogout(){adminSessionKey=null;document.body.classList.remove("admin-mode");document.getElementById("adminDashboard").classList.add("hidden");document.getElementById("adminLogin").classList.remove("hidden");document.getElementById("adminPass").value="";showPage("voting");}
+document.querySelectorAll(".side-link[data-admin]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".side-link").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".admin-section").forEach(x=>x.classList.remove("active"));document.getElementById("admin-"+b.dataset.admin).classList.add("active");document.getElementById("adminTitle").textContent=b.textContent.replace(/^[^A-Za-z]+/,"");refreshAdmin();closeAdminSidebar();});
+let adminSessionKey=null;
+function applyServerState(serverState){
+ if(!serverState)return;
+ state={...state,...serverState};
+ state.votes=state.votes||{nama:[],ketua:[]};
+ state.votes.nama=Array.from({length:DATA.nama.length},(_,i)=>Number(state.votes.nama?.[i]||0));
+ state.votes.ketua=Array.from({length:DATA.ketua.length},(_,i)=>Number(state.votes.ketua?.[i]||0));
+ if(Array.isArray(state.candidates?.nama))DATA.nama=state.candidates.nama;
+ if(Array.isArray(state.candidates?.ketua))DATA.ketua=state.candidates.ketua;
+ if(Array.isArray(state.classes))state.classes=state.classes;
+ if(!Array.isArray(state.logs))state.logs=[];
+ renderVotingCandidates();
+ updateProgress();
+}
+async function refreshAdmin(){
+ if(document.getElementById("adminDashboard").classList.contains("hidden"))return;
+ if(adminSessionKey){
+  try{const res=await apiRequest("adminGetState",{sessionKey:adminSessionKey});applyServerState(res.state);}
+  catch(err){Swal.fire("Database tidak dapat dimuat",err.message||"Gagal mengambil data admin.","error");return;}
+ }
+ const total=state.classes.reduce((n,c)=>n+Number(c.students||0),0),voted=state.classes.reduce((n,c)=>n+Number(c.participation||0),0);
+ document.getElementById("aTotal").textContent=total;document.getElementById("aVoted").textContent=voted;document.getElementById("aNotVoted").textContent=Math.max(0,total-voted);document.getElementById("aPercent").textContent=total?Math.round(voted/total*100)+"%":"0%";
+ document.getElementById("aNamaVotes").textContent=state.votes.nama.reduce((a,b)=>a+b,0);document.getElementById("aKetuaVotes").textContent=state.votes.ketua.reduce((a,b)=>a+b,0);
+ document.getElementById("adminToken").value=state.token;document.getElementById("tokenEnabled").checked=state.tokenEnabled;document.getElementById("voteStatus").value=state.status;
+ renderClasses();renderCandidateTables();renderResults(true);
+ document.getElementById("logList").innerHTML=state.logs.map(l=>`<div style="padding:10px 0;border-bottom:1px solid var(--line);font-size:12px"><b>${l.msg}</b><div style="color:var(--muted);font-size:10px">${l.time}</div></div>`).join("")||"<p class='subtext'>Belum ada aktivitas.</p>";
+}
+function renderClasses(){
+ const total=state.classes.reduce((n,c)=>n+Number(c.students||0),0),part=state.classes.reduce((n,c)=>n+Number(c.participation||0),0);
+ document.getElementById("classTotal").textContent=state.classes.length;document.getElementById("classStudents").textContent=total;document.getElementById("classParticipated").textContent=part;document.getElementById("classRemaining").textContent=Math.max(0,total-part);
+ document.getElementById("classTable").innerHTML=state.classes.map((c,i)=>`<tr><td>${i+1}</td><td><b>${c.name}</b></td><td><code>${c.token}</code></td><td>${c.students}</td><td><b>${Number(c.participation||0)}</b></td><td>${Math.max(0,Number(c.participation||0)-Number(c.students||0))>0?`<span class="tag pending">+${Math.max(0,Number(c.participation||0)-Number(c.students||0))}</span>`:"<span class=\"tag\">0</span>"}</td><td><span class="tag ${c.enabled?"":"off"}">${c.enabled?"Aktif":"Nonaktif"}</span></td><td><button class="btn btn-outline btn-sm" style="color:var(--green)" onclick="editClass(${i})">Edit</button> <button class="btn btn-outline btn-sm" style="color:var(--red)" onclick="toggleClass(${i})">${c.enabled?"Nonaktifkan":"Aktifkan"}</button></td></tr>`).join("");
+}
+function editClass(i){
+ const c=i===undefined?{name:"",token:"",students:0,enabled:true,participation:0}:state.classes[i];
+ Swal.fire({
+  title:`<span class="swal-modal-kicker">${i===undefined?"PENGATURAN PESERTA":"PEMBARUAN DATA"}</span><br>${i===undefined?"Tambah Kelas":"Edit Kelas"}`,
+  html:`<div class="admin-modal-form">
+   <div class="modal-intro"><span class="modal-icon"><i class="fa-solid fa-school"></i></span><div><b>${i===undefined?"Tambahkan kelas baru":"Perbarui informasi kelas"}</b><small>Lengkapi informasi kelas dan token untuk akses voting.</small></div></div>
+   <div class="modal-field"><label for="clName">NAMA KELAS</label><input id="clName" class="swal2-input" placeholder="Contoh: Kelas 9A" value="${String(c.name||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;")}"></div>
+   <div class="modal-field"><label for="clToken">TOKEN KELAS</label><input id="clToken" class="swal2-input" placeholder="Masukkan token kelas" value="${String(c.token||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;")}"><small>Token digunakan siswa untuk membuka halaman voting.</small></div>
+   <div class="modal-field"><label for="clStudents">JUMLAH SISWA</label><input id="clStudents" type="number" min="0" class="swal2-input" placeholder="Jumlah siswa" value="${Number(c.students)||0}"></div>
+  </div>`,
+  customClass:{popup:"admin-swal-popup",title:"admin-swal-title",htmlContainer:"admin-swal-content",confirmButton:"admin-swal-confirm",cancelButton:"admin-swal-cancel"},
+  showCancelButton:true,confirmButtonText:'<i class="fa-solid fa-check"></i> Simpan Kelas',cancelButtonText:"Batal",buttonsStyling:false,
+  preConfirm:()=>{const name=document.getElementById("clName").value.trim(),token=document.getElementById("clToken").value.trim().toUpperCase(),students=Number(document.getElementById("clStudents").value);if(!name||!token||!Number.isFinite(students)||students<0){Swal.showValidationMessage("Lengkapi nama, token, dan jumlah siswa.");return false;}if(state.classes.some((x,j)=>j!==i&&x.token.toUpperCase()===token)){Swal.showValidationMessage("Token kelas sudah digunakan.");return false;}return {name,token,students};}
+ }).then(r=>{if(r.isConfirmed){if(i===undefined)state.classes.push({...r.value,enabled:true,participation:0});else state.classes[i]={...state.classes[i],...r.value};save();log("Admin memperbarui kelas "+r.value.name+".");refreshAdmin();}});
+}
+function toggleClass(i){state.classes[i].enabled=!state.classes[i].enabled;save();log("Status token kelas "+state.classes[i].name+" diubah.");refreshAdmin();}
+function renderCandidateTables(){
+ document.getElementById("candidateNamaTable").innerHTML=DATA.nama.map((d,i)=>`<tr><td>${i+1}</td><td>${d.nama}</td><td>${state.votes.nama[i]||0}</td></tr>`).join("");
+ document.getElementById("candidateKetuaTable").innerHTML=DATA.ketua.map((d,i)=>`<tr>
+  <td>${i+1}</td>
+  <td><img class="candidate-photo-preview" src="${getDrivePhotoUrl(d.foto)}" alt="Foto ${d.nama}" onerror="this.style.opacity='.25'"></td>
+  <td><b>${d.nama}</b></td>
+  <td style="max-width:230px;overflow-wrap:anywhere">${d.foto||"—"}</td>
+  <td>${state.votes.ketua[i]||0}</td>
+  <td><button class="btn btn-outline btn-sm candidate-edit-btn" style="color:var(--green)" onclick="editCandidate(${i})"><i class="fa-solid fa-pen"></i> Edit</button></td>
+ </tr>`).join("");
+}
+function editCandidate(index){
+ const isNew=index===undefined,current=isNew?{nama:"",foto:""}:DATA.ketua[index];
+ Swal.fire({
+  title:`<span class="swal-modal-kicker">${isNew?"KANDIDAT KETUA ANGKATAN":"PEMBARUAN KANDIDAT"}</span><br>${isNew?"Tambah Kandidat":"Edit Kandidat"}`,
+  html:`<div class="admin-modal-form">
+   <div class="modal-intro"><span class="modal-icon"><i class="fa-solid fa-user-tie"></i></span><div><b>${isNew?"Tambahkan calon ketua angkatan":"Perbarui profil calon ketua"}</b><small>Nama dan foto akan ditampilkan pada kartu kandidat voting.</small></div></div>
+   <div class="modal-field"><label for="candidateNameInput">NAMA LENGKAP KANDIDAT</label><input id="candidateNameInput" class="swal2-input" placeholder="Masukkan nama lengkap" value="${String(current.nama||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;")}"></div>
+   <div class="modal-field"><label for="candidatePhotoInput">URL FOTO / LINK GOOGLE DRIVE</label><input id="candidatePhotoInput" class="swal2-input" placeholder="Tempel URL foto atau ID file Google Drive" value="${String(current.foto||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;")}"><small>Pastikan file Google Drive dapat diakses oleh siapa saja yang memiliki link (Viewer).</small></div>
+   <div class="modal-photo-note"><i class="fa-regular fa-image"></i><span>Gunakan foto potret dengan pencahayaan jelas agar tampil optimal pada kartu kandidat.</span></div>
+  </div>`,
+  customClass:{popup:"admin-swal-popup",title:"admin-swal-title",htmlContainer:"admin-swal-content",confirmButton:"admin-swal-confirm",cancelButton:"admin-swal-cancel"},
+  showCancelButton:true,confirmButtonText:'<i class="fa-solid fa-check"></i> Simpan Kandidat',cancelButtonText:"Batal",buttonsStyling:false,
+  preConfirm:()=>{const nama=document.getElementById("candidateNameInput").value.trim(),foto=document.getElementById("candidatePhotoInput").value.trim();if(!nama){Swal.showValidationMessage("Nama kandidat wajib diisi.");return false;}if(foto&&!/^https?:\/\//i.test(foto)&&!/^[a-zA-Z0-9_-]{15,}$/.test(foto)){Swal.showValidationMessage("Masukkan URL gambar, URL Google Drive, atau ID file Drive yang valid.");return false;}return {nama,foto};}
+ }).then(result=>{
+  if(!result.isConfirmed)return;
+  if(isNew){if(DATA.ketua.length>=4){Swal.fire("Batas kandidat","Maksimal empat kandidat ketua pada sistem voting ini.","info");return;}DATA.ketua.push(result.value);state.votes.ketua.push(0);}
+  else DATA.ketua[index]={...DATA.ketua[index],...result.value};
+  state.candidates.ketua=DATA.ketua.map(x=>({...x}));save();log((isNew?"Admin menambahkan":"Admin mengubah")+" kandidat ketua: "+result.value.nama+".");renderCandidateTables();if(classUnlocked)renderVotingCandidates();Swal.fire("Tersimpan","Data kandidat dan URL foto berhasil disimpan.","success");
+ });
+}
+function exportAdmin(format){
+ const active=document.querySelector(".admin-section.active"),id=active?active.id.replace("admin-",""):"dashboard";let title="Rekap E-Voting Angkatan XVI",rows=[];
+ if(id==="classes"){title="Daftar Kelas";rows=[["No","Nama Kelas","Token Kelas","Jumlah Siswa","Jumlah Berpartisipasi","Status"],...state.classes.map((c,i)=>[i+1,c.name,c.token,c.students,c.participation||0,c.enabled?"Aktif":"Nonaktif"])];}
+ else if(id==="candidates"){title="Data Kandidat";rows=[["Kategori","No","Nama Kandidat","Jumlah Suara"],...["nama","ketua"].flatMap(t=>DATA[t].map((d,i)=>[t==="nama"?"Nama Angkatan":"Ketua Angkatan",i+1,d.nama,state.votes[t][i]]))];}
+ else if(id==="logs"){title="Riwayat Aktivitas";rows=[["Aktivitas","Waktu"],...state.logs.map(x=>[x.msg,x.time])];}
+ else if(id==="token"){title="Pengaturan Token Hasil";rows=[["Token Hasil SMPK","Status"],[state.token,state.tokenEnabled?"Aktif":"Nonaktif"]];}
+ else if(id==="settings"){title="Pengaturan Voting";rows=[["Pengaturan","Nilai"],["Status Voting",state.status]];}
+ else{title="Dashboard E-Voting";rows=[["Indikator","Jumlah"],["Total Siswa",state.classes.reduce((n,c)=>n+Number(c.students||0),0)],["Sudah Berpartisipasi",state.classes.reduce((n,c)=>n+Number(c.participation||0),0)],["Suara Nama Angkatan",state.votes.nama.reduce((a,b)=>a+b,0)],["Suara Ketua Angkatan",state.votes.ketua.reduce((a,b)=>a+b,0)]];}
+ const filename=title.replace(/[^a-z0-9]+/gi,"_");
+ if(format==="excel"){if(!window.XLSX){Swal.fire("Library belum tersedia","Export Excel membutuhkan koneksi internet.","warning");return;}const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),title.slice(0,31));XLSX.writeFile(wb,filename+".xlsx");}
+ else{if(!window.jspdf){Swal.fire("Library belum tersedia","Export PDF membutuhkan koneksi internet.","warning");return;}const {jsPDF}=window.jspdf,doc=new jsPDF({orientation:"landscape"});doc.setFontSize(15);doc.text(title,14,15);doc.autoTable({head:[rows[0]],body:rows.slice(1),startY:22,styles:{fontSize:8},headStyles:{fillColor:[35,63,50]}});doc.save(filename+".pdf");}
+}
+async function saveToken(){const val=document.getElementById("adminToken").value.trim();if(val.length<6){Swal.fire("Token terlalu pendek","Gunakan minimal 6 karakter.","warning");return;}state.token=val;state.tokenEnabled=document.getElementById("tokenEnabled").checked;await save();log("Admin memperbarui konfigurasi token hasil.");Swal.fire("Tersimpan","Pengaturan token akses hasil berhasil disimpan ke database.","success");}
+async function saveSettings(){state.status=document.getElementById("voteStatus").value;await save();log("Admin memperbarui status voting menjadi "+state.status);updateProgress();Swal.fire("Tersimpan","Pengaturan voting berhasil disimpan ke database.","success");refreshAdmin();}
+async function bootstrapDatabase(){
+ try{
+  const res=await apiRequest("getPublicData");
+  applyServerState(res.state);
+  document.getElementById("votingStatusPill").textContent="● "+String(state.status||"Berlangsung").toUpperCase();
+ }catch(err){
+  console.error("Bootstrap database:",err);
+  Swal.fire({icon:"error",title:"Database belum terhubung",text:err.message||"Pastikan URL Apps Script dan deployment sudah benar."});
+  updateProgress();
+ }
+}
+bootstrapDatabase();
+</script>
+</body>
+</html>
