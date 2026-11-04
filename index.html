@@ -328,6 +328,11 @@
 .admin-answer-list table{min-width:760px}
 .admin-answer-list td{vertical-align:top}
 .admin-answer-empty{padding:24px!important;text-align:center!important;color:var(--muted)!important}
+#adminAnalysisCapture{display:block;width:100%;padding:0;margin:0}
+#adminAnalysisCapture .admin-answer-panel{margin-top:0!important}
+#admin-analysis .result-toolbar{align-items:center}
+@media(max-width:600px){#admin-analysis .result-toolbar{align-items:stretch;flex-direction:column}}
+
 @media(max-width:600px){
  .admin-answer-heading{align-items:stretch;flex-direction:column;gap:10px}
  .admin-answer-filter,.admin-answer-filter select{width:100%;min-width:0}
@@ -434,7 +439,7 @@
   </div>
   <div class="wrap admin-layout hidden" id="adminDashboard">
     <aside class="sidebar" id="adminSidebar"><div class="sidebar-top"><div class="sidebar-brand">✦ E-Voting XVI<small>ADMIN CONTROL PANEL</small></div><button class="sidebar-toggle" type="button" onclick="toggleAdminSidebar()" aria-label="Sembunyikan atau tampilkan menu sidebar" aria-expanded="true"><i class="fa-solid fa-angles-left"></i><span>Sembunyikan Menu</span></button></div>
-      <button class="side-link active" data-admin="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</button><button class="side-link" data-admin="classes"><i class="fa-solid fa-school"></i> Daftar Kelas</button><button class="side-link" data-admin="candidates"><i class="fa-solid fa-users"></i> Data Kandidat</button><button class="side-link" data-admin="results"><i class="fa-solid fa-chart-pie"></i> Hasil Voting</button><button class="side-link" data-admin="token"><i class="fa-solid fa-key"></i> Token Hasil SMPK</button><button class="side-link" data-admin="settings"><i class="fa-solid fa-sliders"></i> Pengaturan Voting</button><button class="side-link" data-admin="logs"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Aktivitas</button><button class="side-link" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+      <button class="side-link active" data-admin="dashboard"><i class="fa-solid fa-gauge-high"></i> Dashboard</button><button class="side-link" data-admin="classes"><i class="fa-solid fa-school"></i> Daftar Kelas</button><button class="side-link" data-admin="candidates"><i class="fa-solid fa-users"></i> Data Kandidat</button><button class="side-link" data-admin="results"><i class="fa-solid fa-chart-pie"></i> Hasil Voting</button><button class="side-link" data-admin="analysis"><i class="fa-solid fa-chart-column"></i> Analisis Jawaban Per Kelas</button><button class="side-link" data-admin="token"><i class="fa-solid fa-key"></i> Token Hasil SMPK</button><button class="side-link" data-admin="settings"><i class="fa-solid fa-sliders"></i> Pengaturan Voting</button><button class="side-link" data-admin="logs"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Aktivitas</button><button class="side-link" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
     </aside>
     <div class="admin-main">
       <div class="admin-heading"><div class="admin-heading-title"><div class="kicker">CONTROL CENTER</div><h1 id="adminTitle">Dashboard</h1></div><div class="admin-heading-tools"><button class="mobile-sidebar-open" type="button" onclick="toggleAdminSidebar()" aria-label="Tampilkan menu"><i class="fa-solid fa-bars"></i> Menu</button><span class="pill">ADMINISTRATOR</span></div></div>
@@ -452,6 +457,17 @@
           <div class="panel result-panel"><div class="kicker">01 / OUR IDENTITY</div><h3>Hasil Nama Angkatan</h3><div id="adminResultNama"></div></div>
           <div class="panel result-panel"><div class="kicker">02 / OUR LEADER</div><h3>Hasil Ketua Angkatan</h3><div id="adminResultKetua"></div></div>
         </div>
+
+      </section>
+      <section class="admin-section" id="admin-analysis">
+        <div class="result-toolbar">
+          <div><div class="kicker">CLASS RESPONSE ANALYSIS</div><h2 class="page-title" style="font-size:clamp(25px,3vw,34px);margin:4px 0">Analisis Jawaban Per Kelas</h2><small class="subtext">Analisis pilihan Nama Angkatan dan Ketua Angkatan berdasarkan kelas.</small></div>
+          <div class="result-actions" style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary btn-sm" data-html2canvas-ignore="true" onclick="refreshAdmin()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+            <button class="btn btn-outline btn-sm" style="color:var(--green)" data-html2canvas-ignore="true" onclick="copyResultsImage('adminAnalysisCapture',this)"><i class="fa-regular fa-copy"></i> Salin Gambar</button>
+          </div>
+        </div>
+        <div id="adminAnalysisCapture">
         <div class="panel admin-answer-panel" id="adminAnswerAnalysis" style="margin-top:20px">
           <div class="admin-answer-heading">
             <div><div class="kicker">ANALISIS JAWABAN PER KELAS</div><h3 style="margin:4px 0;color:var(--green)">Daftar Jawaban Voting</h3><p class="subtext">Lihat pilihan Nama Angkatan dan Ketua Angkatan berdasarkan kelas.</p></div>
@@ -470,6 +486,7 @@
             <div class="table-wrap"><table><thead><tr><th>No.</th><th>Waktu Memilih</th><th>Kelas</th><th>Pilihan Nama Angkatan</th><th>Pilihan Ketua Angkatan</th></tr></thead><tbody id="adminAnswerTable"><tr><td colspan="5" style="text-align:center">Memuat data jawaban...</td></tr></tbody></table></div>
             <p class="subtext" style="margin-top:10px;font-size:11px">Catatan: sistem menyimpan jawaban berdasarkan kelas dan waktu, bukan nama siswa, sehingga daftar ini tidak menampilkan identitas pemilih.</p>
           </div>
+        </div>
         </div>
       </section>
       <section class="admin-section" id="admin-classes">
@@ -790,12 +807,12 @@ async function copyResultsImage(targetId="resultsContent",triggerBtn=null){
   const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("Gagal membuat file gambar.")),"image/png"));
   if(navigator.clipboard&&window.ClipboardItem&&navigator.clipboard.write){
    await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);
-   Swal.fire({icon:"success",title:"Gambar berhasil disalin",html:"Gambar hasil voting sudah dilengkapi margin agar lebih rapi. Buka WhatsApp, pilih chat tujuan, lalu tekan <b>Ctrl + V</b> atau pilih <b>Tempel</b>."});
+   Swal.fire({icon:"success",title:"Gambar halaman berhasil disalin",html:"Gambar halaman yang sedang dipilih sudah dilengkapi margin agar lebih rapi. Buka WhatsApp, pilih chat tujuan, lalu tekan <b>Ctrl + V</b> atau pilih <b>Tempel</b>."});
   }else{
    const url=URL.createObjectURL(blob),a=document.createElement("a");
-   a.href=url;a.download="hasil-voting-angkatan-xvi.png";a.click();
+   a.href=url;a.download=targetId==="adminAnalysisCapture"?"analisis-jawaban-per-kelas-angkatan-xvi.png":"hasil-voting-angkatan-xvi.png";a.click();
    setTimeout(()=>URL.revokeObjectURL(url),1500);
-   Swal.fire({icon:"info",title:"Gambar berhasil dibuat",text:"Browser belum mendukung salin gambar langsung. File PNG dengan margin sudah diunduh; lampirkan sebagai gambar di WhatsApp."});
+   Swal.fire({icon:"info",title:"Gambar halaman berhasil dibuat",text:"Browser belum mendukung salin gambar langsung. File PNG dengan margin sudah diunduh; lampirkan sebagai gambar di WhatsApp."});
   }
  }catch(err){
   console.error("Salin gambar hasil voting:",err);
