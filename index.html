@@ -309,6 +309,36 @@
 @keyframes loaderCardIn{from{opacity:0;transform:translateY(13px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(prefers-reduced-motion:reduce){#appProcessLoader *{animation-duration:2.5s!important}}
 
+
+/* Analisis jawaban voting per kelas pada dashboard admin */
+.admin-answer-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px}
+.admin-answer-filter select{min-width:220px}
+.admin-answer-total-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:16px 0}
+.admin-answer-total{padding:20px 22px;border-radius:16px;border:1px solid #dce6d9;background:linear-gradient(135deg,#f4faf1,#e6f0e3);min-width:0}
+.admin-answer-total.answer-ketua-total{background:linear-gradient(135deg,#fffaf2,#f5ead8);border-color:#eadcc4}
+.admin-answer-total span{display:flex;align-items:center;gap:8px;color:#45604c;font-size:12px;font-weight:800}
+.admin-answer-total.answer-ketua-total span{color:#896735}
+.admin-answer-total strong{display:block;margin:5px 0 0;color:#233f32;font-size:34px;line-height:1.2}
+.admin-answer-total small{display:block;margin-top:4px;color:#778277;font-size:10px}
+.admin-answer-breakdown{margin-bottom:18px}
+.admin-answer-breakdown .result-panel{padding:20px}
+.admin-answer-list{margin-top:20px}
+.admin-answer-list-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.admin-answer-list .table-wrap{max-height:560px}
+.admin-answer-list table{min-width:760px}
+.admin-answer-list td{vertical-align:top}
+.admin-answer-empty{padding:24px!important;text-align:center!important;color:var(--muted)!important}
+@media(max-width:600px){
+ .admin-answer-heading{align-items:stretch;flex-direction:column;gap:10px}
+ .admin-answer-filter,.admin-answer-filter select{width:100%;min-width:0}
+ .admin-answer-total-grid{gap:9px}
+ .admin-answer-total{padding:15px 12px}
+ .admin-answer-total span{font-size:10px;line-height:1.45}
+ .admin-answer-total strong{font-size:27px}
+ .admin-answer-breakdown{grid-template-columns:1fr}
+ .admin-answer-list-head{align-items:flex-start;flex-direction:column}
+}
+
 </style>
 </head>
 <body>
@@ -421,6 +451,25 @@
         <div class="result-grid">
           <div class="panel result-panel"><div class="kicker">01 / OUR IDENTITY</div><h3>Hasil Nama Angkatan</h3><div id="adminResultNama"></div></div>
           <div class="panel result-panel"><div class="kicker">02 / OUR LEADER</div><h3>Hasil Ketua Angkatan</h3><div id="adminResultKetua"></div></div>
+        </div>
+        <div class="panel admin-answer-panel" id="adminAnswerAnalysis" style="margin-top:20px">
+          <div class="admin-answer-heading">
+            <div><div class="kicker">ANALISIS JAWABAN PER KELAS</div><h3 style="margin:4px 0;color:var(--green)">Daftar Jawaban Voting</h3><p class="subtext">Lihat pilihan Nama Angkatan dan Ketua Angkatan berdasarkan kelas.</p></div>
+            <div class="field admin-answer-filter" data-html2canvas-ignore="true" style="margin:0;min-width:220px"><label for="adminAnswerClassFilter">FILTER KELAS</label><select id="adminAnswerClassFilter" onchange="renderAdminVoteDetails()"><option value="">Semua Kelas</option></select></div>
+          </div>
+          <div class="admin-answer-total-grid">
+            <div class="admin-answer-total answer-nama-total"><span><i class="fa-solid fa-signature"></i> Total Jawaban Nama Angkatan</span><strong id="adminAnswerNamaTotal">0</strong><small>Suara masuk sesuai filter kelas</small></div>
+            <div class="admin-answer-total answer-ketua-total"><span><i class="fa-solid fa-crown"></i> Total Jawaban Ketua Angkatan</span><strong id="adminAnswerKetuaTotal">0</strong><small>Suara masuk sesuai filter kelas</small></div>
+          </div>
+          <div class="result-grid admin-answer-breakdown">
+            <div class="panel result-panel"><div class="kicker">01 / PILIHAN NAMA ANGKATAN</div><h3>Rekap Pilihan Nama</h3><div id="adminAnswerNamaBreakdown"></div></div>
+            <div class="panel result-panel"><div class="kicker">02 / PILIHAN KETUA ANGKATAN</div><h3>Rekap Pilihan Ketua</h3><div id="adminAnswerKetuaBreakdown"></div></div>
+          </div>
+          <div class="admin-answer-list">
+            <div class="admin-answer-list-head"><div><h3 style="margin:0;color:var(--green)">Rincian Jawaban Pemilih</h3><p class="subtext">Setiap baris merupakan satu transaksi voting.</p></div><span class="pill" id="adminAnswerRowsCount">0 Jawaban</span></div>
+            <div class="table-wrap"><table><thead><tr><th>No.</th><th>Waktu Memilih</th><th>Kelas</th><th>Pilihan Nama Angkatan</th><th>Pilihan Ketua Angkatan</th></tr></thead><tbody id="adminAnswerTable"><tr><td colspan="5" style="text-align:center">Memuat data jawaban...</td></tr></tbody></table></div>
+            <p class="subtext" style="margin-top:10px;font-size:11px">Catatan: sistem menyimpan jawaban berdasarkan kelas dan waktu, bukan nama siswa, sehingga daftar ini tidak menampilkan identitas pemilih.</p>
+          </div>
         </div>
       </section>
       <section class="admin-section" id="admin-classes">
@@ -766,6 +815,67 @@ async function copyAdminToken(){
  }catch(err){input.focus();input.select();Swal.fire("Salin otomatis gagal","Token sudah dipilih. Tekan Ctrl + C untuk menyalinnya.","warning");}
 }
 
+
+function populateAdminAnswerClassFilter(){
+ const select=document.getElementById("adminAnswerClassFilter");
+ if(!select)return;
+ const selected=select.value;
+ select.innerHTML='<option value="">Semua Kelas</option>';
+ state.classes.forEach(cls=>{
+  const option=document.createElement("option");
+  option.value=String(cls.id);option.textContent=cls.name;
+  select.appendChild(option);
+ });
+ if([...select.options].some(o=>o.value===selected))select.value=selected;
+}
+function renderAdminVoteDetails(){
+ const filter=document.getElementById("adminAnswerClassFilter");
+ const classId=filter?filter.value:"";
+ const rows=adminVoteDetails.filter(row=>!classId||String(row.classId)===classId);
+ const namaCounts=new Map(),ketuaCounts=new Map();
+ rows.forEach(row=>{
+  const nama=String(row.namaPilihan||"Tidak diketahui"),ketua=String(row.ketuaPilihan||"Tidak diketahui");
+  namaCounts.set(nama,(namaCounts.get(nama)||0)+1);
+  ketuaCounts.set(ketua,(ketuaCounts.get(ketua)||0)+1);
+ });
+ const namaTotal=document.getElementById("adminAnswerNamaTotal"),ketuaTotal=document.getElementById("adminAnswerKetuaTotal");
+ if(namaTotal)namaTotal.textContent=rows.length;
+ if(ketuaTotal)ketuaTotal.textContent=rows.length;
+ const drawBreakdown=(id,map,total)=>{
+  const target=document.getElementById(id);if(!target)return;
+  target.innerHTML="";
+  const sorted=[...map.entries()].sort((a,b)=>b[1]-a[1]);
+  if(!sorted.length){target.textContent="Belum ada jawaban pada filter ini.";return;}
+  sorted.forEach(([name,count],index)=>{
+   const pct=total?count/total*100:0,row=document.createElement("div");row.className="result-row";
+   const label=document.createElement("div");label.className="result-label";
+   const nameSpan=document.createElement("span");nameSpan.textContent=(index+1)+". "+name;
+   const value=document.createElement("strong");value.textContent=count+" suara · "+pct.toFixed(1)+"%";
+   label.append(nameSpan,value);
+   const bar=document.createElement("div");bar.className="bar";
+   const fill=document.createElement("i");fill.style.width=pct+"%";bar.appendChild(fill);
+   row.append(label,bar);target.appendChild(row);
+  });
+  const foot=document.createElement("small");foot.style.color="var(--muted)";foot.textContent="Total jawaban: "+total;target.appendChild(foot);
+ };
+ drawBreakdown("adminAnswerNamaBreakdown",namaCounts,rows.length);
+ drawBreakdown("adminAnswerKetuaBreakdown",ketuaCounts,rows.length);
+ const countLabel=document.getElementById("adminAnswerRowsCount");if(countLabel)countLabel.textContent=rows.length+" Jawaban";
+ const tbody=document.getElementById("adminAnswerTable");if(!tbody)return;
+ tbody.innerHTML="";
+ if(!rows.length){
+  const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=5;td.className="admin-answer-empty";
+  td.textContent="Belum ada jawaban voting untuk kelas yang dipilih.";tr.appendChild(td);tbody.appendChild(tr);return;
+ }
+ rows.forEach((row,index)=>{
+  const tr=document.createElement("tr");
+  [String(index+1),String(row.timestamp||"—"),String(row.className||"—"),String(row.namaPilihan||"—"),String(row.ketuaPilihan||"—")].forEach(value=>{
+   const td=document.createElement("td");td.textContent=value;tr.appendChild(td);
+  });
+  tbody.appendChild(tr);
+ });
+}
+
 function renderResults(forAdmin=false){
  if(!resultsUnlocked&&!forAdmin)return;
  const totalVoters=state.classes.reduce((n,c)=>n+Number(c.students||0),0);
@@ -848,6 +958,7 @@ function closeAdminSidebar(){
 function adminLogout(){adminSessionKey=null;document.body.classList.remove("admin-mode");document.getElementById("adminDashboard").classList.add("hidden");document.getElementById("adminLogin").classList.remove("hidden");document.getElementById("adminPass").value="";showPage("voting");}
 document.querySelectorAll(".side-link[data-admin]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".side-link").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".admin-section").forEach(x=>x.classList.remove("active"));document.getElementById("admin-"+b.dataset.admin).classList.add("active");document.getElementById("adminTitle").textContent=b.textContent.replace(/^[^A-Za-z]+/,"");refreshAdmin();closeAdminSidebar();});
 let adminSessionKey=null;
+let adminVoteDetails=[];
 function applyServerState(serverState){
  if(!serverState)return;
  state={...state,...serverState};
@@ -864,14 +975,19 @@ function applyServerState(serverState){
 async function refreshAdmin(){
  if(document.getElementById("adminDashboard").classList.contains("hidden"))return;
  if(adminSessionKey){
-  try{const res=await apiRequest("adminGetState",{sessionKey:adminSessionKey});applyServerState(res.state);}
+  try{
+   const res=await apiRequest("adminGetState",{sessionKey:adminSessionKey});
+   applyServerState(res.state);
+   const detailRes=await apiRequest("adminGetVoteDetails",{sessionKey:adminSessionKey});
+   adminVoteDetails=Array.isArray(detailRes.rows)?detailRes.rows:[];
+  }
   catch(err){Swal.fire("Database tidak dapat dimuat",err.message||"Gagal mengambil data admin.","error");return;}
  }
  const total=state.classes.reduce((n,c)=>n+Number(c.students||0),0),voted=state.classes.reduce((n,c)=>n+Number(c.participation||0),0);
  document.getElementById("aTotal").textContent=total;document.getElementById("aVoted").textContent=voted;document.getElementById("aNotVoted").textContent=Math.max(0,total-voted);document.getElementById("aPercent").textContent=total?Math.round(voted/total*100)+"%":"0%";
  document.getElementById("aNamaVotes").textContent=state.votes.nama.reduce((a,b)=>a+b,0);document.getElementById("aKetuaVotes").textContent=state.votes.ketua.reduce((a,b)=>a+b,0);
  document.getElementById("adminToken").value=state.token;document.getElementById("tokenEnabled").checked=state.tokenEnabled;document.getElementById("voteStatus").value=state.status;
- renderClasses();renderCandidateTables();renderResults(true);
+ renderClasses();renderCandidateTables();renderResults(true);populateAdminAnswerClassFilter();renderAdminVoteDetails();
  document.getElementById("logList").innerHTML=state.logs.map(l=>`<div style="padding:10px 0;border-bottom:1px solid var(--line);font-size:12px"><b>${l.msg}</b><div style="color:var(--muted);font-size:10px">${l.time}</div></div>`).join("")||"<p class='subtext'>Belum ada aktivitas.</p>";
 }
 function renderClasses(){
